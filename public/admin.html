@@ -12,7 +12,7 @@
         <header class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-bold">Panel Admin Bioskop</h1>
-                <p class="text-slate-400 text-sm mt-1">Kelola film dan pantau transaksi pemesanan tiket.</p>
+                <p class="text-slate-400 text-sm mt-1">Kelola film, atur kursi, dan pantau transaksi pemesanan tiket.</p>
             </div>
             <a href="/" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition">← Ke Beranda Utama</a>
         </header>
@@ -31,8 +31,12 @@
                         <input type="number" id="moviePrice" required placeholder="50000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">URL Poster Gambar</label>
-                        <input type="url" id="movieImage" required placeholder="https://link-gambar.com/poster.jpg" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Jumlah Total Kursi</label>
+                        <input type="number" id="movieSeats" required placeholder="30" value="30" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Pilih Berkas Poster (File Lokal)</label>
+                        <input type="file" id="movieFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-indigo-400 hover:file:bg-slate-750 cursor-pointer">
                     </div>
                     <button type="submit" id="submitBtn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-600/20">
                         Simpan Film
@@ -40,12 +44,30 @@
                 </form>
             </div>
 
-            <!-- Kolom Kanan: Daftar Transaksi Booking -->
+            <!-- Kolom Kanan: Daftar Film & Daftar Booking -->
             <div class="lg:col-span-2 space-y-8">
+                <!-- Tabel Daftar Film -->
                 <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-                    <div class="p-4 border-b border-slate-800 font-semibold text-lg flex justify-between items-center">
-                        <span>Daftar Transaksi Pemesanan</span>
+                    <div class="p-4 border-b border-slate-800 font-semibold text-lg">Daftar Film Tersedia</div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800/50 text-slate-400 text-sm border-b border-slate-800">
+                                    <th class="p-4">Judul</th>
+                                    <th class="p-4">Harga</th>
+                                    <th class="p-4">Kursi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="moviesTableBody" class="divide-y divide-slate-800 text-sm">
+                                <tr><td colspan="3" class="p-4 text-center text-slate-400">Memuat data film...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+
+                <!-- Tabel Transaksi Booking -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                    <div class="p-4 border-b border-slate-800 font-semibold text-lg">Daftar Transaksi Pemesanan</div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
@@ -59,9 +81,7 @@
                                 </tr>
                             </thead>
                             <tbody id="bookingsTableBody" class="divide-y divide-slate-800 text-sm">
-                                <tr>
-                                    <td colspan="6" class="p-4 text-center text-slate-400">Memuat data pemesanan...</td>
-                                </tr>
+                                <tr><td colspan="6" class="p-4 text-center text-slate-400">Memuat data pemesanan...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -72,76 +92,102 @@
 
     <!-- Script JavaScript -->
     <script>
-        // 1. Fungsi Ambil Data Pemesanan
-        async function fetchBookings() {
-            const tableBody = document.getElementById('bookingsTableBody');
+        // 1. Ambil Data Film & Pemesanan
+        async function fetchAdminData() {
+            const moviesBody = document.getElementById('moviesTableBody');
+            const bookingsBody = document.getElementById('bookingsTableBody');
+
             try {
-                const response = await fetch('/api/bookings');
-                const contentType = response.headers.get("content-type");
-                if (!contentType || !contentType.includes("application/json")) {
-                    throw new Error("Endpoint API /api/bookings tidak ditemukan.");
+                // Fetch Movies
+                const resMovies = await fetch('/api/movies');
+                const movies = await resMovies.json();
+                if (movies.length === 0) {
+                    moviesBody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400">Belum ada film.</td></tr>`;
+                } else {
+                    moviesBody.innerHTML = movies.map(m => `
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="p-4 font-medium">${m.title}</td>
+                            <td class="p-4">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
+                            <td class="p-4">${m.seats || m.total_seats || 30} Kursi</td>
+                        </tr>
+                    `).join('');
                 }
 
-                const bookings = await response.json();
-                if (!response.ok) throw new Error(bookings.error || "Gagal mengambil data.");
-
+                // Fetch Bookings
+                const resBookings = await fetch('/api/bookings');
+                const bookings = await resBookings.json();
                 if (bookings.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada data pemesanan.</td></tr>`;
-                    return;
+                    bookingsBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada data pemesanan.</td></tr>`;
+                } else {
+                    bookingsBody.innerHTML = bookings.map(b => `
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="p-4 font-mono text-xs text-slate-400">${b.id}</td>
+                            <td class="p-4 font-medium">${b.customer_name || '-'}</td>
+                            <td class="p-4">${b.movie_title || '-'}</td>
+                            <td class="p-4"><span class="px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded text-xs font-semibold">${b.seats || '-'}</span></td>
+                            <td class="p-4">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
+                            <td class="p-4 text-slate-400 text-xs">${new Date(b.created_at).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `).join('');
                 }
-
-                tableBody.innerHTML = bookings.map(b => `
-                    <tr class="hover:bg-slate-800/30 transition">
-                        <td class="p-4 font-mono text-xs text-slate-400">${b.id}</td>
-                        <td class="p-4 font-medium">${b.customer_name || '-'}</td>
-                        <td class="p-4">${b.movie_title || '-'}</td>
-                        <td class="p-4"><span class="px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded text-xs font-semibold">${b.seats || '-'}</span></td>
-                        <td class="p-4">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
-                        <td class="p-4 text-slate-400 text-xs">${new Date(b.created_at).toLocaleString('id-ID')}</td>
-                    </tr>
-                `).join('');
             } catch (err) {
-                console.error("Error:", err);
-                tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400">Gagal memuat data: ${err.message}</td></tr>`;
+                console.error("Gagal memuat data:", err);
             }
         }
 
-        // 2. Event Listener untuk Form Tambah Film
+        // 2. Tambah Film Baru (Konversi File Gambar Lokal ke Base64)
         document.getElementById('addMovieForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
-            
-            const newMovie = {
-                title: document.getElementById('movieTitle').value,
-                price: Number(document.getElementById('moviePrice').value),
-                image_url: document.getElementById('movieImage').value
+            const fileInput = document.getElementById('movieFile');
+
+            let imageUrl = "https://via.placeholder.com/300x450?text=No+Image";
+
+            const processSubmit = async (finalImageUrl) => {
+                const newMovie = {
+                    title: document.getElementById('movieTitle').value,
+                    price: Number(document.getElementById('moviePrice').value),
+                    seats: Number(document.getElementById('movieSeats').value),
+                    image_url: finalImageUrl
+                };
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Menyimpan...";
+
+                try {
+                    const response = await fetch('/api/movies', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newMovie)
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.error || "Gagal menambah film.");
+
+                    alert("Film berhasil ditambahkan!");
+                    document.getElementById('addMovieForm').reset();
+                    fetchAdminData();
+                } catch (err) {
+                    alert("Terjadi kesalahan: " + err.message);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Simpan Film";
+                }
             };
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Menyimpan...";
-
-            try {
-                const response = await fetch('/api/movies', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newMovie)
-                });
-
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.error || "Gagal menambah film.");
-
-                alert("Film berhasil ditambahkan!");
-                document.getElementById('addMovieForm').reset();
-            } catch (err) {
-                alert("Terjadi kesalahan: " + err.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Simpan Film";
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    processSubmit(uploadEvent.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                processSubmit(imageUrl);
             }
         });
 
-        // Jalankan saat halaman dimuat
-        fetchBookings();
+        // Jalankan saat dimuat
+        fetchAdminData();
     </script>
 </body>
 </html>

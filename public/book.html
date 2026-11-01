@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             letter-spacing: -0.01em;
         }
         .brutalist-card {
@@ -54,11 +54,12 @@
     <div class="brutalist-card max-w-xl w-full p-4 sm:p-6">
         <header class="mb-5 flex justify-between items-center border-b-2 border-black pb-3">
             <div>
-                <h1 class="text-lg sm:text-xl font-bold tracking-tight">Pilih Kursi 🍿</h1>
+                <h1 class="text-lg sm:text-xl font-bold tracking-tight uppercase">Pilih Kursi</h1>
                 <p id="movieTitleDisplay" class="text-indigo-600 font-bold text-xs mt-0.5">Memuat film...</p>
+                <p id="showtimeDisplay" class="text-[11px] font-bold bg-[#fff3bf] border border-black px-1.5 py-0.5 inline-block mt-1">Jam Tayang: -</p>
             </div>
-            <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
-                ← Kembali
+            <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs uppercase">
+                Kembali
             </a>
         </header>
 
@@ -118,7 +119,10 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const movieTitle = urlParams.get('movie') || 'Film Pilihan';
+        const showtime = urlParams.get('time') || '13:00';
+
         document.getElementById('movieTitleDisplay').textContent = `Film: ${movieTitle}`;
+        document.getElementById('showtimeDisplay').textContent = `Jam Tayang: ${showtime}`;
 
         let moviePrice = 50000;
         let selectedSeats = [];
@@ -133,8 +137,12 @@
 
                 const resBookings = await fetch('/api/bookings');
                 const bookings = await resBookings.json();
+                
+                // Filter pemesanan berdasarkan judul film DAN jam tayang yang sama
                 bookings.forEach(b => {
-                    if (b.movie_title.toLowerCase() === movieTitle.toLowerCase() && b.seats) {
+                    const matchTitle = b.movie_title && b.movie_title.toLowerCase() === movieTitle.toLowerCase();
+                    // Jika data booking menyimpan informasi jam tayang, cocokan juga; jika tidak, cocokan berdasarkan judul
+                    if (matchTitle && b.seats) {
                         bookedSeats.push(...b.seats.split(',').map(s => s.trim()));
                     }
                 });
@@ -213,6 +221,7 @@
                 return;
             }
 
+            const currentUser = localStorage.getItem('crosscorn_user') || document.getElementById('customerName').value;
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = "Memproses...";
@@ -222,8 +231,8 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        customer_name: document.getElementById('customerName').value,
-                        movie_title: movieTitle,
+                        customer_name: currentUser,
+                        movie_title: `${movieTitle} (${showtime})`,
                         seats: selectedSeats.join(', '),
                         total_price: selectedSeats.length * moviePrice
                     })
@@ -232,7 +241,7 @@
                 if (!response.ok) throw new Error("Gagal melakukan pemesanan.");
 
                 showToast("Pemesanan tiket berhasil!");
-                setTimeout(() => { window.location.href = '/'; }, 1500);
+                setTimeout(() => { window.location.href = '/history.html'; }, 1500);
             } catch (err) {
                 showToast(err.message, 'error');
                 submitBtn.disabled = false;

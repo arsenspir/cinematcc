@@ -42,11 +42,11 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header di Tengah, Tanpa Emoji/Simbol Panah -->
+        <!-- Header di Tengah -->
         <header class="mb-8 bg-[#fff3bf] brutalist-card p-6 text-center space-y-4">
             <div class="max-w-xl mx-auto">
                 <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">CROSSCORN</h1>
-                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih jadwal tayang film hari ini dan amankan kursimu</p>
+                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih film favoritmu dan amankan kursimu</p>
             </div>
             
             <div id="userNavArea" class="flex flex-wrap items-center justify-center gap-2 pt-1">
@@ -114,16 +114,8 @@
                     const totalSeats = m.seats !== undefined ? m.seats : (m.total_seats || 30);
                     const isAvailable = totalSeats > 0;
                     
-                    // Pecah jadwal tayang (misal: "13:00, 16:00, 19:00") menjadi tombol-tombol jam
-                    const rawSchedule = m.schedule || '13:00, 16:00, 19:00';
-                    const scheduleList = rawSchedule.split(',').map(s => s.trim());
-
-                    let scheduleButtonsHTML = scheduleList.map(time => `
-                        <a href="/book.html?movie=${encodeURIComponent(m.title)}&time=${encodeURIComponent(time)}" 
-                           class="px-2.5 py-1 bg-[#fff3bf] border border-black text-[11px] font-bold shadow-[1.5px_1.5px_0px_#000] hover:bg-[#ffe066] transition">
-                            ${time}
-                        </a>
-                    `).join('');
+                    // Mengambil data genre dari database (default jika kosong)
+                    const genreText = m.genre || m.schedule || 'Drama, Action';
 
                     return `
                         <div class="brutalist-card overflow-hidden flex flex-col justify-between bg-white">
@@ -138,10 +130,10 @@
                                     <h3 class="text-base font-bold text-slate-900 tracking-tight leading-snug uppercase">${m.title}</h3>
                                     
                                     <div>
-                                        <span class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Jadwal Tayang Hari Ini:</span>
-                                        <div class="flex flex-wrap gap-1.5">
-                                            ${isAvailable ? scheduleButtonsHTML : '<span class="text-xs text-red-600 font-bold">Tiket Habis</span>'}
-                                        </div>
+                                        <span class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Genre:</span>
+                                        <span class="text-xs bg-[#fff3bf] border border-black px-2 py-1 inline-block font-bold shadow-[1px_1px_0px_#000]">
+                                            ${genreText}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

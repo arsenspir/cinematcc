@@ -4,83 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CROSSCORN - Beranda Bioskop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.01em;
+        }
         .brutalist-card {
             background: #ffffff;
-            border: 3px solid #000000;
-            box-shadow: 6px 6px 0px #000000;
-            transition: all 0.1s ease;
-        }
-        .brutalist-card:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 8px 8px 0px #000000;
-        }
-        .brutalist-btn {
-            border: 3px solid #000000;
+            border: 2px solid #000000;
             box-shadow: 4px 4px 0px #000000;
             transition: all 0.1s ease;
+            border-radius: 0px !important;
         }
-        .brutalist-btn:hover {
+        .brutalist-card:hover {
             transform: translate(-1px, -1px);
             box-shadow: 6px 6px 0px #000000;
         }
+        .brutalist-btn {
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0px #000000;
+            transition: all 0.1s ease;
+            border-radius: 0px !important;
+        }
+        .brutalist-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000000;
+        }
         .brutalist-btn:active {
             transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px #000000;
+            box-shadow: 1px 1px 0px #000000;
         }
     </style>
 </head>
-<body class="bg-[#f4f4f0] text-black min-h-screen p-4 sm:p-10 font-sans">
-    <div class="max-w-6xl mx-auto">
+<body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
+    <div class="max-w-5xl mx-auto">
         <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-yellow-400 brutalist-card p-6 rounded-2xl">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 bg-[#fff3bf] brutalist-card p-5">
             <div>
-                <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tight">CROSSCORN 🍿</h1>
-                <p class="font-bold text-xs sm:text-sm mt-1">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">CROSSCORN 🍿</h1>
+                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-0.5">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
             </div>
-            <a href="/admin.html" class="brutalist-btn px-5 py-2.5 bg-white font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
+            <a href="/admin.html" class="brutalist-btn px-4 py-2 bg-white font-semibold text-xs uppercase tracking-wide">
                 Panel Admin →
             </a>
         </header>
 
         <!-- Container Daftar Film -->
-        <div id="moviesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            <div class="col-span-full text-center font-bold py-10">Memuat daftar film...</div>
+        <div id="moviesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="col-span-full text-center text-xs font-semibold py-10">Memuat daftar film...</div>
         </div>
     </div>
 
     <!-- Modal Detail Film -->
-    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="brutalist-card max-w-lg w-full overflow-hidden rounded-2xl relative bg-white">
-            <button onclick="closeMovieModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-red-500 text-white border-2 border-black font-black rounded-lg flex items-center justify-center shadow-[2px_2px_0px_#000]">
+    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/30 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="brutalist-card max-w-md w-full overflow-hidden relative bg-white">
+            <button onclick="closeMovieModal()" class="absolute top-3 right-3 z-10 w-7 h-7 bg-[#ff6b6b] text-white border-2 border-black font-bold text-xs flex items-center justify-center shadow-[2px_2px_0px_#000]">
                 ✕
             </button>
-            <div class="h-60 sm:h-72 w-full bg-slate-200 border-b-3 border-black relative">
+            <div class="h-52 sm:h-60 w-full bg-[#f1f3f5] border-b-2 border-black relative">
                 <img id="modalImage" src="" alt="Poster" class="w-full h-full object-cover">
             </div>
-            <div class="p-6 space-y-4">
+            <div class="p-5 space-y-3">
                 <div>
-                    <h2 id="modalTitle" class="text-2xl font-black uppercase"></h2>
-                    <p id="modalPrice" class="text-indigo-700 font-extrabold text-base mt-1"></p>
+                    <h2 id="modalTitle" class="text-xl font-bold tracking-tight text-slate-900"></h2>
+                    <p id="modalPrice" class="text-indigo-600 font-bold text-xs mt-0.5"></p>
                 </div>
-                <div class="grid grid-cols-2 gap-3 bg-[#f4f4f0] border-3 border-black p-4 rounded-xl shadow-[3px_3px_0px_#000] text-xs font-bold">
+                <div class="grid grid-cols-2 gap-2 bg-[#f8f9fa] border-2 border-black p-3 shadow-[2px_2px_0px_#000] text-[11px]">
                     <div>
-                        <span class="text-slate-600 block uppercase">Durasi</span>
-                        <span id="modalDuration" class="text-sm font-black">120 Menit</span>
+                        <span class="text-slate-500 block">Durasi</span>
+                        <span id="modalDuration" class="font-bold text-slate-900">120 Menit</span>
                     </div>
                     <div>
-                        <span class="text-slate-600 block uppercase">Kursi Tersedia</span>
-                        <span id="modalSeats" class="text-sm font-black text-emerald-700">30 Kursi</span>
+                        <span class="text-slate-500 block">Kursi Tersedia</span>
+                        <span id="modalSeats" class="font-bold text-emerald-700">30 Kursi</span>
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black uppercase tracking-wider mb-1">Sinopsis</h3>
-                    <p id="modalSynopsis" class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Sinopsis</h3>
+                    <p id="modalSynopsis" class="text-xs text-slate-700 leading-relaxed font-normal">
                         Sinopsis belum tersedia.
                     </p>
                 </div>
-                <div id="modalAction" class="pt-2"></div>
+                <div id="modalAction" class="pt-1"></div>
             </div>
         </div>
     </div>
@@ -97,7 +106,7 @@
                 if (!response.ok) throw new Error("Gagal mengambil data film.");
 
                 if (allMovies.length === 0) {
-                    container.innerHTML = `<div class="col-span-full text-center font-bold py-10 brutalist-card rounded-2xl p-8 bg-white">Belum ada film yang tersedia saat ini.</div>`;
+                    container.innerHTML = `<div class="col-span-full text-center text-xs font-semibold py-8 brutalist-card p-6 bg-white">Belum ada film yang tersedia saat ini.</div>`;
                     return;
                 }
 
@@ -106,27 +115,27 @@
                     const isAvailable = totalSeats > 0;
 
                     return `
-                        <div class="brutalist-card rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group bg-white" onclick="openMovieModal('${m.id}')">
+                        <div class="brutalist-card overflow-hidden flex flex-col justify-between cursor-pointer group bg-white" onclick="openMovieModal('${m.id}')">
                             <div>
-                                <div class="h-64 w-full bg-yellow-100 border-b-3 border-black relative overflow-hidden">
+                                <div class="h-56 w-full bg-[#f1f3f5] border-b-2 border-black relative overflow-hidden">
                                     <img src="${m.image_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
-                                    <span class="absolute top-3 right-3 px-3 py-1 bg-white border-2 border-black font-black text-xs rounded-lg shadow-[2px_2px_0px_#000] ${isAvailable ? 'text-emerald-700' : 'text-red-600'}">
+                                    <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 bg-white border-2 border-black font-bold text-[10px] shadow-[2px_2px_0px_#000] ${isAvailable ? 'text-emerald-700' : 'text-red-600'}">
                                         ${isAvailable ? `${totalSeats} Kursi` : 'Habis'}
                                     </span>
                                 </div>
-                                <div class="p-5">
-                                    <h3 class="text-xl font-black uppercase tracking-tight">${m.title}</h3>
-                                    <p class="text-sm font-extrabold text-indigo-700 mt-1">Rp ${Number(m.price || 0).toLocaleString('id-ID')} / tiket</p>
-                                    <p class="text-xs font-bold text-slate-600 mt-2 underline">Klik untuk lihat detail & sinopsis →</p>
+                                <div class="p-4">
+                                    <h3 class="text-base font-bold text-slate-900 tracking-tight leading-snug">${m.title}</h3>
+                                    <p class="text-xs font-bold text-indigo-600 mt-0.5">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</p>
+                                    <p class="text-[11px] font-medium text-slate-500 mt-1.5 underline">Detail & Sinopsis →</p>
                                 </div>
                             </div>
-                            <div class="p-5 pt-0">
+                            <div class="p-4 pt-0">
                                 ${isAvailable ? `
-                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-3 bg-[#7ec8e3] brutalist-btn font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
+                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-2 bg-[#99e9f2] brutalist-btn font-bold text-xs tracking-wide">
                                         Pesan Tiket
                                     </button>
                                 ` : `
-                                    <button disabled class="w-full py-3 bg-slate-200 border-3 border-black font-bold text-xs sm:text-sm rounded-xl text-slate-500 cursor-not-allowed">
+                                    <button disabled class="w-full py-2 bg-[#e9ecef] border-2 border-black font-semibold text-xs text-slate-400 cursor-not-allowed">
                                         Tiket Habis
                                     </button>
                                 `}
@@ -137,7 +146,7 @@
 
             } catch (err) {
                 console.error("Error:", err);
-                container.innerHTML = `<div class="col-span-full text-center font-bold text-red-600 py-10 brutalist-card rounded-2xl bg-white">Gagal memuat film: ${err.message}</div>`;
+                container.innerHTML = `<div class="col-span-full text-center text-xs font-semibold text-red-600 py-8 brutalist-card bg-white">Gagal memuat film: ${err.message}</div>`;
             }
         }
 
@@ -157,13 +166,13 @@
             const actionContainer = document.getElementById('modalAction');
             if (isAvailable) {
                 actionContainer.innerHTML = `
-                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-3 bg-[#7ec8e3] brutalist-btn font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
+                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-2.5 bg-[#99e9f2] brutalist-btn font-bold text-xs tracking-wide">
                         Pesan Kursi Sekarang
                     </button>
                 `;
             } else {
                 actionContainer.innerHTML = `
-                    <button disabled class="w-full py-3 bg-slate-200 border-3 border-black font-bold text-xs sm:text-sm rounded-xl text-slate-500 cursor-not-allowed">
+                    <button disabled class="w-full py-2.5 bg-[#e9ecef] border-2 border-black font-semibold text-xs text-slate-400 cursor-not-allowed">
                         Tiket Habis
                     </button>
                 `;

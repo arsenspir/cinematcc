@@ -1,33 +1,43 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin - CROSSCORN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.01em;
+        }
         .brutalist-card {
             background: #ffffff;
-            border: 3px solid #000000;
-            box-shadow: 6px 6px 0px #000000;
+            border: 2px solid #000000;
+            box-shadow: 5px 5px 0px #000000;
+            border-radius: 0px !important;
         }
         .brutalist-input {
             border: 2px solid #000000;
             background: #ffffff;
             transition: all 0.1s ease;
+            border-radius: 0px !important;
         }
         .brutalist-input:focus {
             outline: none;
-            box-shadow: 3px 3px 0px #000000;
+            box-shadow: 2px 2px 0px #000000;
         }
         .brutalist-btn {
-            border: 3px solid #000000;
-            box-shadow: 3px 3px 0px #000000;
+            border: 2px solid #000000;
+            box-shadow: 2.5px 2.5px 0px #000000;
             transition: all 0.1s ease;
+            border-radius: 0px !important;
         }
         .brutalist-btn:hover {
             transform: translate(-1px, -1px);
-            box-shadow: 5px 5px 0px #000000;
+            box-shadow: 3.5px 3.5px 0px #000000;
         }
         .brutalist-btn:active {
             transform: translate(2px, 2px);
@@ -35,86 +45,86 @@
         }
     </style>
 </head>
-<body class="bg-[#f4f4f0] text-black min-h-screen p-4 sm:p-10 font-sans">
-    <div class="max-w-6xl mx-auto">
+<body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
+    <div class="max-w-5xl mx-auto">
         <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-[#ff90e8] brutalist-card p-6 rounded-2xl">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 bg-[#ffdeeb] brutalist-card p-5">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-black uppercase">Panel Admin CROSSCORN 🛠️</h1>
-                <p class="font-bold text-xs sm:text-sm mt-1">Kelola daftar film, atur jumlah kursi, dan hapus transaksi.</p>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Panel Admin CROSSCORN 🛠️</h1>
+                <p class="font-medium text-xs text-slate-700 mt-0.5">Kelola daftar film, atur jumlah kursi, dan hapus transaksi.</p>
             </div>
-            <a href="/" class="brutalist-btn px-4 py-2 bg-yellow-400 font-black text-xs uppercase rounded-xl">
+            <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
                 ← Ke Beranda
             </a>
         </header>
 
-        <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 border-3 border-black shadow-[4px_4px_0px_#000] rounded-xl text-xs sm:text-sm font-black"></div>
+        <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-2.5 border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-bold"></div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Form Tambah Film -->
-            <div class="brutalist-card rounded-2xl p-6 h-fit bg-white">
-                <h2 class="text-lg font-black uppercase mb-4 text-black">Tambah Film Baru</h2>
-                <form id="addMovieForm" class="space-y-4">
+            <div class="brutalist-card p-5 h-fit bg-white">
+                <h2 class="text-sm font-bold uppercase tracking-wide mb-3">Tambah Film Baru</h2>
+                <form id="addMovieForm" class="space-y-3">
                     <div>
-                        <label class="block text-xs font-black uppercase mb-1">Judul Film: <span class="text-red-600">*</span></label>
-                        <input type="text" id="movieTitle" required placeholder="Contoh: Interstellar" class="brutalist-input w-full rounded-xl px-3 py-2 text-xs font-bold">
+                        <label class="block text-xs font-bold mb-1">Judul Film: <span class="text-red-600">*</span></label>
+                        <input type="text" id="movieTitle" required placeholder="Contoh: Interstellar" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
-                        <label class="block text-xs font-black uppercase mb-1">Harga Tiket (Rp): <span class="text-red-600">*</span></label>
-                        <input type="number" id="moviePrice" required placeholder="50000" class="brutalist-input w-full rounded-xl px-3 py-2 text-xs font-bold">
+                        <label class="block text-xs font-bold mb-1">Harga Tiket (Rp): <span class="text-red-600">*</span></label>
+                        <input type="number" id="moviePrice" required placeholder="50000" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
-                        <label class="block text-xs font-black uppercase mb-1">Jumlah Total Kursi: <span class="text-red-600">*</span></label>
-                        <input type="number" id="movieSeats" required value="48" class="brutalist-input w-full rounded-xl px-3 py-2 text-xs font-bold">
+                        <label class="block text-xs font-bold mb-1">Jumlah Total Kursi: <span class="text-red-600">*</span></label>
+                        <input type="number" id="movieSeats" required value="48" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
-                        <label class="block text-xs font-black uppercase mb-1">Poster Film (File Lokal)</label>
-                        <input type="file" id="movieFile" accept="image/*" class="w-full text-xs font-bold file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-2 file:border-black file:bg-yellow-400 file:font-black cursor-pointer">
+                        <label class="block text-xs font-bold mb-1">Poster Film (File Lokal)</label>
+                        <input type="file" id="movieFile" accept="image/*" class="w-full text-xs font-semibold file:mr-2 file:py-1 file:px-2.5 file:border-2 file:border-black file:bg-[#fff3bf] file:font-bold cursor-pointer">
                     </div>
-                    <button type="submit" id="submitBtn" class="brutalist-btn w-full py-3 bg-[#7ec8e3] font-black text-xs uppercase rounded-xl">
+                    <button type="submit" id="submitBtn" class="brutalist-btn w-full py-2 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide">
                         Simpan Film
                     </button>
                 </form>
             </div>
 
             <!-- Tabel Data -->
-            <div class="lg:col-span-2 space-y-8">
+            <div class="lg:col-span-2 space-y-6">
                 <!-- Daftar Film -->
-                <div class="brutalist-card rounded-2xl overflow-hidden bg-white">
-                    <div class="p-4 bg-yellow-300 border-b-3 border-black font-black uppercase text-sm">Daftar Film Tersedia</div>
+                <div class="brutalist-card overflow-hidden bg-white">
+                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film Tersedia</div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-100 border-b-3 border-black text-xs font-black uppercase">
-                                    <th class="p-3">Judul</th>
-                                    <th class="p-3">Harga</th>
-                                    <th class="p-3">Sisa Kursi</th>
-                                    <th class="p-3 text-center">Aksi</th>
+                                <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
+                                    <th class="p-2.5">Judul</th>
+                                    <th class="p-2.5">Harga</th>
+                                    <th class="p-2.5">Sisa Kursi</th>
+                                    <th class="p-2.5 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="moviesTableBody" class="divide-y-2 divide-black text-xs font-bold">
-                                <tr><td colspan="4" class="p-4 text-center">Memuat film...</td></tr>
+                            <tbody id="moviesTableBody" class="divide-y-2 divide-black text-xs font-medium">
+                                <tr><td colspan="4" class="p-3 text-center text-xs">Memuat film...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <!-- Daftar Transaksi -->
-                <div class="brutalist-card rounded-2xl overflow-hidden bg-white">
-                    <div class="p-4 bg-emerald-300 border-b-3 border-black font-black uppercase text-sm">Daftar Pemesanan Tiket</div>
+                <div class="brutalist-card overflow-hidden bg-white">
+                    <div class="p-3 bg-[#b2f2bb] border-b-2 border-black font-bold uppercase text-xs">Daftar Pemesanan Tiket</div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-100 border-b-3 border-black text-xs font-black uppercase">
-                                    <th class="p-3">Nama</th>
-                                    <th class="p-3">Film</th>
-                                    <th class="p-3">Kursi</th>
-                                    <th class="p-3">Total</th>
-                                    <th class="p-3 text-center">Aksi</th>
+                                <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
+                                    <th class="p-2.5">Nama</th>
+                                    <th class="p-2.5">Film</th>
+                                    <th class="p-2.5">Kursi</th>
+                                    <th class="p-2.5">Total</th>
+                                    <th class="p-2.5 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="bookingsTableBody" class="divide-y-2 divide-black text-xs font-bold">
-                                <tr><td colspan="5" class="p-4 text-center">Memuat pesanan...</td></tr>
+                            <tbody id="bookingsTableBody" class="divide-y-2 divide-black text-xs font-medium">
+                                <tr><td colspan="5" class="p-3 text-center text-xs">Memuat pesanan...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -127,8 +137,8 @@
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 border-3 border-black shadow-[4px_4px_0px_#000] rounded-xl text-xs sm:text-sm font-black ${
-                type === 'success' ? 'bg-emerald-300 text-black' : 'bg-red-400 text-black'
+            toast.className = `fixed top-5 right-5 z-50 px-4 py-2.5 border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-bold ${
+                type === 'success' ? 'bg-[#b2f2bb] text-black' : 'bg-[#ff8787] text-black'
             }`;
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 3000);
@@ -142,14 +152,14 @@
                 const resMovies = await fetch('/api/movies');
                 const movies = await resMovies.json();
                 moviesBody.innerHTML = movies.length === 0 
-                    ? `<tr><td colspan="4" class="p-4 text-center">Belum ada film.</td></tr>`
+                    ? `<tr><td colspan="4" class="p-3 text-center text-xs">Belum ada film.</td></tr>`
                     : movies.map(m => `
                         <tr>
-                            <td class="p-3 uppercase font-black">${m.title}</td>
-                            <td class="p-3">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
-                            <td class="p-3"><span class="px-2 py-1 bg-yellow-300 border-2 border-black rounded text-[10px] font-black">${m.seats !== undefined ? m.seats : 48} Kursi</span></td>
-                            <td class="p-3 text-center">
-                                <button onclick="deleteMovie('${m.id}')" class="px-2.5 py-1 bg-red-500 text-white brutalist-btn text-[10px] uppercase rounded font-black">Hapus</button>
+                            <td class="p-2.5 font-bold uppercase text-xs">${m.title}</td>
+                            <td class="p-2.5">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
+                            <td class="p-2.5"><span class="px-2 py-0.5 bg-[#fff3bf] border-2 border-black text-[10px] font-bold">${m.seats !== undefined ? m.seats : 48} Kursi</span></td>
+                            <td class="p-2.5 text-center">
+                                <button onclick="deleteMovie('${m.id}')" class="px-2 py-0.5 bg-[#ff6b6b] text-white brutalist-btn text-[10px] font-bold">Hapus</button>
                             </td>
                         </tr>
                     `).join('');
@@ -157,15 +167,15 @@
                 const resBookings = await fetch('/api/bookings');
                 const bookings = await resBookings.json();
                 bookingsBody.innerHTML = bookings.length === 0 
-                    ? `<tr><td colspan="5" class="p-4 text-center">Belum ada transaksi.</td></tr>`
+                    ? `<tr><td colspan="5" class="p-3 text-center text-xs">Belum ada transaksi.</td></tr>`
                     : bookings.map(b => `
                         <tr>
-                            <td class="p-3 font-black">${b.customer_name || '-'}</td>
-                            <td class="p-3 uppercase">${b.movie_title || '-'}</td>
-                            <td class="p-3"><span class="px-2 py-0.5 bg-cyan-200 border-2 border-black rounded text-[10px] font-black">${b.seats || '-'}</span></td>
-                            <td class="p-3">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-center">
-                                <button onclick="deleteBooking('${b.id}')" class="px-2.5 py-1 bg-red-500 text-white brutalist-btn text-[10px] uppercase rounded font-black">Hapus</button>
+                            <td class="p-2.5 font-bold text-xs">${b.customer_name || '-'}</td>
+                            <td class="p-2.5 uppercase">${b.movie_title || '-'}</td>
+                            <td class="p-2.5"><span class="px-2 py-0.5 bg-[#e7f5ff] border-2 border-black text-[10px] font-bold">${b.seats || '-'}</span></td>
+                            <td class="p-2.5">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
+                            <td class="p-2.5 text-center">
+                                <button onclick="deleteBooking('${b.id}')" class="px-2 py-0.5 bg-[#ff6b6b] text-white brutalist-btn text-[10px] font-bold">Hapus</button>
                             </td>
                         </tr>
                     `).join('');

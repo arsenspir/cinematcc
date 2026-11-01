@@ -43,11 +43,10 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header di Tengah, Tanpa Emoji/Simbol Panah -->
         <header class="mb-6 bg-[#ffdeeb] brutalist-card p-6 text-center space-y-3">
             <div class="max-w-xl mx-auto">
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight uppercase">PANEL ADMIN CROSSCORN</h1>
-                <p class="font-medium text-xs text-slate-700 mt-1">Kelola film, atur genre, dan transaksi pemesanan</p>
+                <p class="font-medium text-xs text-slate-700 mt-1">Kelola film, atur jadwal tayang, genre, dan transaksi</p>
             </div>
             <div>
                 <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs uppercase">
@@ -77,8 +76,12 @@
                         <input type="number" id="movieSeats" required value="48" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1">Genre Film (Contoh: Sci-Fi, Drama):</label>
-                        <input type="text" id="movieGenre" placeholder="Sci-Fi, Adventure, Drama" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
+                        <label class="block text-xs font-bold mb-1">Genre Film:</label>
+                        <input type="text" id="movieGenre" placeholder="Sci-Fi, Adventure" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Jadwal Tayang (Pisahkan dengan koma):</label>
+                        <input type="text" id="movieSchedule" placeholder="13:00, 15:30, 18:00, 20:30" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1">Poster Film (File Lokal)</label>
@@ -99,12 +102,12 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Daftar Film -->
                 <div class="brutalist-card overflow-hidden bg-white">
-                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film & Pengaturan Genre</div>
+                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film & Jadwal Tayang</div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
-                                    <th class="p-2.5">Judul & Genre</th>
+                                    <th class="p-2.5">Judul, Genre & Jadwal</th>
                                     <th class="p-2.5">Harga</th>
                                     <th class="p-2.5">Kursi</th>
                                     <th class="p-2.5 text-center">Aksi</th>
@@ -125,7 +128,7 @@
                             <thead>
                                 <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
                                     <th class="p-2.5">Nama</th>
-                                    <th class="p-2.5">Film</th>
+                                    <th class="p-2.5">Film & Jadwal</th>
                                     <th class="p-2.5">Kursi</th>
                                     <th class="p-2.5">Total</th>
                                     <th class="p-2.5 text-center">Aksi</th>
@@ -168,7 +171,8 @@
                         <tr>
                             <td class="p-2.5 space-y-1">
                                 <strong class="uppercase text-xs block">${m.title}</strong>
-                                <span class="text-[10px] bg-[#fff3bf] border border-black px-1.5 py-0.5 font-bold inline-block">Genre: ${m.genre || m.schedule || 'Drama, Action'}</span>
+                                <span class="text-[10px] bg-[#fff3bf] border border-black px-1.5 py-0.5 font-bold inline-block">Genre: ${m.genre || '-'}</span>
+                                <span class="text-[10px] bg-[#e7f5ff] border border-black px-1.5 py-0.5 font-bold inline-block">Jadwal: ${m.schedule || '13:00, 15:30'}</span>
                             </td>
                             <td class="p-2.5">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
                             <td class="p-2.5"><span class="px-2 py-0.5 bg-[#fff3bf] border-2 border-black text-[10px] font-bold">${m.seats !== undefined ? m.seats : 48}</span></td>
@@ -207,9 +211,10 @@
             document.getElementById('movieTitle').value = movie.title;
             document.getElementById('moviePrice').value = movie.price;
             document.getElementById('movieSeats').value = movie.seats !== undefined ? movie.seats : 48;
-            document.getElementById('movieGenre').value = movie.genre || movie.schedule || '';
+            document.getElementById('movieGenre').value = movie.genre || '';
+            document.getElementById('movieSchedule').value = movie.schedule || '';
             
-            document.getElementById('formTitle').textContent = "Edit Film & Genre";
+            document.getElementById('formTitle').textContent = "Edit Film & Jadwal";
             document.getElementById('submitBtn').textContent = "Perbarui Film";
             document.getElementById('cancelEditBtn').classList.remove('hidden');
         }
@@ -260,6 +265,7 @@
                     price: Number(document.getElementById('moviePrice').value),
                     seats: Number(document.getElementById('movieSeats').value),
                     genre: document.getElementById('movieGenre').value,
+                    schedule: document.getElementById('movieSchedule').value,
                     image_url: finalImageUrl
                 };
 
@@ -294,7 +300,6 @@
                 }
             };
 
-            // Kompresi otomatis gambar untuk mencegah error 413 Content Too Large
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {

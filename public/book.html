@@ -15,87 +15,87 @@
         .cinema-seat::after {
             content: '';
             position: absolute;
-            bottom: -3px;
+            bottom: -2px;
             left: 2px;
             right: 2px;
-            height: 3px;
+            height: 2px;
             background: currentColor;
             opacity: 0.4;
             border-radius: 0 0 2px 2px;
         }
         /* Efek Melengkung Layar Bioskop */
         .curved-screen {
-            border-top: 4px solid #94a3b8;
-            border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+            border-top: 3px solid #94a3b8;
+            border-radius: 50% 50% 0 0 / 15px 15px 0 0;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8 flex items-center justify-center">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-3 sm:p-6 flex items-center justify-center">
     <!-- Toast Notifikasi Custom -->
-    <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 rounded-2xl text-sm font-medium shadow-2xl border transition-all duration-300"></div>
+    <div id="toast" class="hidden fixed top-4 right-4 z-50 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium shadow-2xl border transition-all duration-300"></div>
 
-    <div class="max-w-4xl w-full bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+    <div class="max-w-2xl w-full bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl">
         <!-- Header Navigasi -->
-        <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-6">
+        <header class="mb-6 flex justify-between items-center border-b border-slate-800 pb-4">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight text-white">Pilih Tempat Duduk</h1>
-                <p id="movieTitleDisplay" class="text-indigo-400 text-sm font-medium mt-1">Memuat film...</p>
+                <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">Pilih Tempat Duduk</h1>
+                <p id="movieTitleDisplay" class="text-indigo-400 text-xs sm:text-sm font-medium mt-0.5">Memuat film...</p>
             </div>
-            <a href="/" class="inline-flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 px-4 py-2.5 rounded-2xl transition border border-slate-700/50 group">
-                <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <a href="/" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 px-3 py-2 rounded-xl transition border border-slate-700/50 group">
+                <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Kembali
             </a>
         </header>
 
-        <form id="bookingForm" class="space-y-6">
+        <form id="bookingForm" class="space-y-5">
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Nama Pemesan</label>
-                <input type="text" id="customerName" required placeholder="Masukkan nama lengkap Anda" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-amber-500 transition shadow-inner">
+                <label class="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Nama Pemesan</label>
+                <input type="text" id="customerName" required placeholder="Masukkan nama lengkap Anda" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-amber-500 transition shadow-inner">
             </div>
 
             <!-- Area Layar dan Denah Kursi -->
-            <div class="space-y-6">
-                <!-- Layar Bioskop Melengkung sesuai Referensi Gambar -->
-                <div class="w-full pt-4 pb-2 text-center">
-                    <div class="curved-screen w-3/4 mx-auto pt-2 text-xs font-bold tracking-widest text-slate-400 uppercase">
+            <div class="space-y-4">
+                <!-- Layar Bioskop Melengkung -->
+                <div class="w-full pt-2 pb-1 text-center">
+                    <div class="curved-screen w-4/5 mx-auto pt-1.5 text-[10px] sm:text-xs font-bold tracking-widest text-slate-400 uppercase">
                         Layar Bioskop
                     </div>
                 </div>
 
-                <!-- Container Denah Kursi (Baris 1-7 dengan Lorong Tengah) -->
-                <div class="bg-slate-950 p-6 rounded-3xl border border-slate-800/80 shadow-inner overflow-x-auto">
-                    <div id="seatGrid" class="flex flex-col gap-3 min-w-[500px] justify-center items-center">
+                <!-- Container Denah Kursi (Responsive Scroll untuk Mobile) -->
+                <div class="bg-slate-950 p-3 sm:p-5 rounded-2xl border border-slate-800/80 shadow-inner overflow-x-auto">
+                    <div id="seatGrid" class="flex flex-col gap-2.5 min-w-[320px] justify-center items-center">
                         <!-- Kursi dirender via JS -->
                     </div>
                 </div>
 
                 <!-- Legenda Status Kursi -->
-                <div class="flex flex-wrap justify-center gap-6 text-xs text-slate-400 pt-2">
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 bg-slate-600 rounded-sm"></span> Tersedia
+                <div class="flex flex-wrap justify-center gap-4 sm:gap-6 text-[11px] sm:text-xs text-slate-400 pt-1">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 bg-slate-600 rounded-sm"></span> Tersedia
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 bg-amber-500 rounded-sm shadow-md shadow-amber-500/30"></span> Dipilih
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 bg-amber-500 rounded-sm shadow-md shadow-amber-500/30"></span> Dipilih
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 bg-slate-800 rounded-sm border border-slate-700"></span> Dipesan
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 bg-slate-800 rounded-sm border border-slate-700"></span> Dipesan
                     </div>
                 </div>
             </div>
 
             <!-- Ringkasan Pemesanan -->
-            <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex justify-between items-center gap-2">
                 <div>
-                    <span class="text-xs text-slate-400 block mb-1">Kursi Dipilih (<span id="countDisplay">0</span>):</span>
-                    <span id="selectedSeatsDisplay" class="font-bold text-amber-400 text-sm">-</span>
+                    <span class="text-[11px] sm:text-xs text-slate-400 block mb-0.5">Kursi (<span id="countDisplay">0</span>):</span>
+                    <span id="selectedSeatsDisplay" class="font-bold text-amber-400 text-xs sm:text-sm">-</span>
                 </div>
-                <div class="text-left sm:text-right">
-                    <span class="text-xs text-slate-400 block mb-1">Total Harga:</span>
-                    <span id="totalPriceDisplay" class="font-bold text-emerald-400 text-lg">Rp 0</span>
+                <div class="text-right">
+                    <span class="text-[11px] sm:text-xs text-slate-400 block mb-0.5">Total Harga:</span>
+                    <span id="totalPriceDisplay" class="font-bold text-emerald-400 text-sm sm:text-base">Rp 0</span>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-2xl text-sm transition shadow-xl shadow-amber-500/20">
+            <button type="submit" id="submitBtn" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm transition shadow-lg shadow-amber-500/20">
                 Konfirmasi Pemesanan
             </button>
         </form>
@@ -105,7 +105,7 @@
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 rounded-2xl text-sm font-medium shadow-2xl border transition-all duration-300 ${
+            toast.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium shadow-2xl border transition-all duration-300 ${
                 type === 'success' ? 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200' : 'bg-red-950/90 border-red-500/50 text-red-200'
             }`;
             toast.classList.remove('hidden');
@@ -147,46 +147,47 @@
 
         function renderSeats() {
             const seatGrid = document.getElementById('seatGrid');
-            const rowCount = 7; // Baris 1 - 7 sesuai referensi
-            const seatsPerSide = 5; // 5 kursi di kiri, 5 kursi di kanan (Total 10 per baris)
+            const rows = ['A', 'B', 'C', 'D', 'E', 'F']; // Baris A - F
+            const seatsPerSide = 4; // 4 kursi di kiri, 4 kursi di kanan (Total 8 kursi per baris agar pas di mobile)
             let html = '';
 
-            for (let row = 1; row <= rowCount; row++) {
-                html += `<div class="flex items-center gap-3">`;
+            rows.forEach((rowLetter, index) => {
+                const rowNum = index + 1;
+                html += `<div class="flex items-center gap-2 sm:gap-3">`;
                 
-                // Angka Baris Kiri
-                html += `<span class="w-5 text-center text-xs font-bold text-slate-500">${row}</span>`;
+                // Label Baris Kiri (A, B, C...)
+                html += `<span class="w-4 text-center text-[11px] sm:text-xs font-bold text-slate-500">${rowLetter}</span>`;
                 
-                // Blok Kursi Kiri (1-5)
-                html += `<div class="flex gap-2">`;
+                // Blok Kursi Kiri (1-4)
+                html += `<div class="flex gap-1.5 sm:gap-2">`;
                 for (let col = 1; col <= seatsPerSide; col++) {
-                    const seatCode = `${row}-${col}`;
-                    html += createSeatButton(seatCode, col);
+                    const seatCode = `${rowLetter}${col}`;
+                    html += createSeatButton(seatCode);
                 }
                 html += `</div>`;
 
                 // Lorong Tengah (Walkway Gap)
-                html += `<div class="w-6 sm:w-10"></div>`;
+                html += `<div class="w-4 sm:w-6"></div>`;
 
-                // Blok Kursi Kanan (6-10)
-                html += `<div class="flex gap-2">`;
+                // Blok Kursi Kanan (5-8)
+                html += `<div class="flex gap-1.5 sm:gap-2">`;
                 for (let col = seatsPerSide + 1; col <= seatsPerSide * 2; col++) {
-                    const seatCode = `${row}-${col}`;
-                    html += createSeatButton(seatCode, col);
+                    const seatCode = `${rowLetter}${col}`;
+                    html += createSeatButton(seatCode);
                 }
                 html += `</div>`;
 
-                // Angka Baris Kanan
-                html += `<span class="w-5 text-center text-xs font-bold text-slate-500">${row}</span>`;
+                // Label Baris Kanan
+                html += `<span class="w-4 text-center text-[11px] sm:text-xs font-bold text-slate-500">${rowLetter}</span>`;
                 
                 html += `</div>`;
-            }
+            });
 
             seatGrid.innerHTML = html;
             updateSummary();
         }
 
-        function createSeatButton(seatCode, displayNum) {
+        function createSeatButton(seatCode) {
             const isBooked = bookedSeats.includes(seatCode);
             const isSelected = selectedSeats.includes(seatCode);
 
@@ -194,13 +195,14 @@
             if (isBooked) {
                 bgClass = "bg-slate-800/80 border border-slate-800 text-slate-700 cursor-not-allowed opacity-60";
             } else if (isSelected) {
-                bgClass = "bg-amber-500 text-slate-950 font-bold scale-105 shadow-lg shadow-amber-500/30";
+                bgClass = "bg-amber-500 text-slate-950 font-bold scale-105 shadow-md shadow-amber-500/30";
             }
 
             return `
                 <button type="button" 
-                    class="cinema-seat w-7 h-7 sm:w-8 sm:h-8 text-[10px] font-semibold transition-all flex items-center justify-center ${bgClass}"
+                    class="cinema-seat w-7 h-7 sm:w-8 sm:h-8 text-[10px] sm:text-xs font-semibold transition-all flex items-center justify-center ${bgClass}"
                     ${isBooked ? 'disabled' : `onclick="toggleSeat('${seatCode}')"`}>
+                    ${seatCode}
                 </button>
             `;
         }

@@ -1,4 +1,177 @@
-async function initPage() {
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Kursi & Jam Tayang - CROSSCORN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .brutalist-card {
+            background: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 5px 5px 0px #000000;
+            border-radius: 0px !important;
+        }
+        .brutalist-input {
+            border: 2px solid #000000;
+            background: #ffffff;
+            transition: all 0.1s ease;
+            border-radius: 0px !important;
+        }
+        .brutalist-input:focus {
+            outline: none;
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .brutalist-btn {
+            border: 2px solid #000000;
+            box-shadow: 2.5px 2.5px 0px #000000;
+            transition: all 0.1s ease;
+            border-radius: 0px !important;
+        }
+        .brutalist-btn:hover:not(:disabled) {
+            transform: translate(-1px, -1px);
+            box-shadow: 3.5px 3.5px 0px #000000;
+        }
+        .seat {
+            border: 2px solid #000000;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 0px !important;
+            transition: all 0.1s ease;
+        }
+        .seat.available {
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        .seat.available:hover {
+            background-color: #fff3bf;
+        }
+        .seat.selected {
+            background-color: #fff3bf !important;
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .seat.booked {
+            background-color: #ff8787 !important;
+            color: #ffffff;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .time-btn {
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            font-weight: 700;
+            font-size: 11px;
+            border-radius: 0px !important;
+            transition: all 0.1s ease;
+        }
+        .time-btn.active {
+            background-color: #a5d8ff !important;
+            box-shadow: 2px 2px 0px #000000;
+        }
+    </style>
+</head>
+<body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-3 sm:p-6 flex items-center justify-center">
+
+    <div class="brutalist-card max-w-2xl w-full p-4 sm:p-6 bg-white space-y-5">
+        
+        <!-- Header Info Film -->
+        <div class="flex justify-between items-start border-b-2 border-black pb-4">
+            <div>
+                <h1 class="text-xl font-extrabold uppercase tracking-tight">PILIH KURSI & JADWAL</h1>
+                <p class="text-xs font-bold text-slate-700 mt-1">Film: <span id="movieTitleDisplay" class="text-indigo-600 uppercase">Memuat...</span></p>
+            </div>
+            <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs uppercase">
+                Kembali
+            </a>
+        </div>
+
+        <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-2.5 border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-bold"></div>
+
+        <!-- Form Pemesan & Pilihan Jam Tayang -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#f8f9fa] p-3.5 border-2 border-black">
+            <div>
+                <label class="block text-xs font-bold mb-1">Nama Pemesan: <span class="text-red-600">*</span></label>
+                <input type="text" id="customerName" placeholder="Masukkan nama Anda" required class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-1">Pilih Jam Tayang:</label>
+                <div class="flex gap-1.5 pt-0.5" id="timeSlotsContainer">
+                    <button type="button" class="time-btn active flex-1 py-1.5" onclick="selectTimeSlot(this, '13:00')">13:00</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Denah Kursi -->
+        <div class="space-y-4">
+            <div class="w-full bg-slate-200 border-2 border-black py-1 text-center font-bold text-[10px] uppercase tracking-widest text-slate-600">
+                LAYAR BIOSKOP
+            </div>
+
+            <div id="seatsGrid" class="grid grid-cols-8 gap-1.5 sm:gap-2 pt-2 max-w-md mx-auto">
+                <!-- Kursi di-render otomatis via JavaScript -->
+            </div>
+
+            <div class="flex justify-center items-center gap-4 text-[11px] font-bold pt-2 border-t-2 border-slate-100">
+                <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 border-2 border-black bg-white inline-block"></span> Tersedia</div>
+                <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 border-2 border-black bg-[#fff3bf] inline-block"></span> Dipilih</div>
+                <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 border-2 border-black bg-[#ff8787] inline-block"></span> Dipesan</div>
+            </div>
+        </div>
+
+        <!-- Ringkasan Harga & Kursi -->
+        <div class="border-2 border-black p-3 bg-[#e7f5ff] flex justify-between items-center text-xs font-bold">
+            <div>
+                <span class="block text-slate-600 text-[10px] uppercase">Kursi Terpilih (<span id="selectedCount">0</span>):</span>
+                <span id="selectedSeatsList" class="text-blue-700 font-extrabold">-</span>
+            </div>
+            <div class="text-right">
+                <span class="block text-slate-600 text-[10px] uppercase">Total Harga:</span>
+                <span id="totalPriceDisplay" class="text-emerald-700 font-extrabold text-sm">Rp 0</span>
+            </div>
+        </div>
+
+        <!-- Tombol Submit -->
+        <button type="button" id="submitBookingBtn" onclick="submitBooking()" class="brutalist-btn w-full py-3 bg-[#99e9f2] font-extrabold text-xs uppercase tracking-wide">
+            KONFIRMASI PEMESANAN
+        </button>
+
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieTitleParam = urlParams.get('movie') || 'Tes Film 1';
+        
+        let selectedSeats = [];
+        let ticketPrice = 35000;
+        let selectedTime = '13:00';
+        let bookedSeatsList = [];
+
+        document.getElementById('movieTitleDisplay').textContent = movieTitleParam;
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `fixed top-5 right-5 z-50 px-4 py-2.5 border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-bold ${
+                type === 'success' ? 'bg-[#b2f2bb] text-black' : 'bg-[#ff8787] text-black'
+            }`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function selectTimeSlot(element, time) {
+            document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            selectedTime = time;
+        }
+
+        async function initPage() {
             try {
                 const resMovies = await fetch('/api/movies');
                 if (resMovies.ok) {
@@ -7,11 +180,10 @@ async function initPage() {
                     if (movie) {
                         if (movie.price) ticketPrice = Number(movie.price);
                         
-                        // Jika admin mengatur jadwal khusus, render tombol jam tayangnya secara dinamis
                         if (movie.schedule) {
                             const times = movie.schedule.split(',').map(t => t.trim()).filter(Boolean);
                             if (times.length > 0) {
-                                selectedTime = times[0]; // Set default ke jadwal pertama
+                                selectedTime = times[0];
                                 const timeContainer = document.getElementById('timeSlotsContainer');
                                 timeContainer.innerHTML = times.map((t, index) => `
                                     <button type="button" class="time-btn ${index === 0 ? 'active' : ''} flex-1 py-1.5" onclick="selectTimeSlot(this, '${t}')">${t}</button>
@@ -39,3 +211,103 @@ async function initPage() {
 
             renderSeats();
         }
+
+        function renderSeats() {
+            const seatsGrid = document.getElementById('seatsGrid');
+            seatsGrid.innerHTML = '';
+
+            const rows = ['A', 'B', 'C', 'D', 'E', 'F'];
+            const cols = 8;
+
+            rows.forEach(row => {
+                for (let i = 1; i <= cols; i++) {
+                    const seatId = `${row}${i}`;
+                    const isBooked = bookedSeatsList.includes(seatId);
+
+                    const seatBtn = document.createElement('button');
+                    seatBtn.type = 'button';
+                    seatBtn.className = `seat h-8 flex items-center justify-center ${isBooked ? 'booked' : 'available'}`;
+                    seatBtn.textContent = seatId;
+
+                    if (!isBooked) {
+                        seatBtn.onclick = () => toggleSeatSelection(seatBtn, seatId);
+                    }
+
+                    seatsGrid.appendChild(seatBtn);
+                }
+            });
+        }
+
+        function toggleSeatSelection(button, seatId) {
+            if (selectedSeats.includes(seatId)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatId);
+                button.classList.remove('selected');
+            } else {
+                selectedSeats.push(seatId);
+                button.classList.add('selected');
+            }
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('selectedCount').textContent = selectedSeats.length;
+            document.getElementById('selectedSeatsList').textContent = selectedSeats.length > 0 ? selectedSeats.join(', ') : '-';
+            
+            const totalPrice = selectedSeats.length * ticketPrice;
+            document.getElementById('totalPriceDisplay').textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+        }
+
+        async function submitBooking() {
+            const customerName = document.getElementById('customerName').value.trim();
+            const submitBtn = document.getElementById('submitBookingBtn');
+
+            if (!customerName) {
+                showToast("Silakan masukkan nama pemesan terlebih dahulu!", "error");
+                return;
+            }
+
+            if (selectedSeats.length === 0) {
+                showToast("Silakan pilih minimal 1 kursi!", "error");
+                return;
+            }
+
+            const totalPrice = selectedSeats.length * ticketPrice;
+            const bookingPayload = {
+                customer_name: customerName,
+                movie_title: `${movieTitleParam} (${selectedTime})`,
+                seats: selectedSeats.join(', '),
+                total_price: totalPrice
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "MEMPROSES PEMESANAN...";
+
+            try {
+                const response = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingPayload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Gagal melakukan pemesanan.");
+                }
+
+                showToast("Pemesanan berhasil dikonfirmasi!");
+                setTimeout(() => {
+                    window.location.href = '/history.html';
+                }, 1500);
+
+            } catch (err) {
+                showToast(err.message, "error");
+                submitBtn.disabled = false;
+                submitBtn.textContent = "KONFIRMASI PEMESANAN";
+            }
+        }
+
+        initPage();
+    </script>
+</body>
+</html>

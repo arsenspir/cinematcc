@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Foto - CROSSCORN</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .brutalist-card {
+            background: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 5px 5px 0px #000000;
+            border-radius: 0px !important;
+        }
+        .brutalist-btn {
+            border: 2px solid #000000;
+            box-shadow: 2.5px 2.5px 0px #000000;
+            transition: all 0.1s ease;
+            border-radius: 0px !important;
+        }
+        .brutalist-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3.5px 3.5px 0px #000000;
+        }
+        /* Pastikan kontainer gambar cropper tidak melebihi layar */
+        .img-container {
+            max-height: 400px;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8 flex items-center justify-center">
+
+    <div class="brutalist-card max-w-lg w-full p-6 space-y-4 bg-white">
+        <h1 class="text-xl font-extrabold uppercase tracking-tight text-center">Sesuaikan & Crop Foto</h1>
+        <p class="text-xs text-slate-600 text-center">Pilih foto poster, sesuaikan kotak crop, lalu simpan hasil ukurannya.</p>
+
+        <!-- Input File -->
+        <div>
+            <input type="file" id="imageInput" accept="image/*" class="w-full text-xs font-semibold file:mr-2 file:py-1.5 file:px-3 file:border-2 file:border-black file:bg-[#fff3bf] file:font-bold cursor-pointer border-2 border-black p-1">
+        </div>
+
+        <!-- Area Cropper -->
+        <div class="img-container border-2 border-black overflow-hidden hidden" id="cropperWrapper">
+            <img id="imagePreview" src="" alt="Source" class="max-w-full block">
+        </div>
+
+        <!-- Tombol Aksi Crop -->
+        <div class="flex gap-2 pt-2">
+            <button type="button" id="cropBtn" class="brutalist-btn flex-1 py-2.5 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide hidden">
+                Crop & Ambil Hasil
+            </button>
+            <a href="/admin.html" class="brutalist-btn px-4 py-2.5 bg-[#ff8787] text-white font-bold text-xs uppercase text-center">
+                Kembali
+            </a>
+        </div>
+
+        <!-- Hasil Preview Potongan Gambar -->
+        <div id="resultContainer" class="hidden space-y-2 pt-4 border-t-2 border-black">
+            <h2 class="text-xs font-bold uppercase">Hasil Potongan:</h2>
+            <div class="flex justify-center border-2 border-black p-2 bg-[#f8f9fa]">
+                <img id="resultImage" src="" alt="Hasil Crop" class="max-h-40 object-contain">
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script>
+        let cropper = null;
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const cropperWrapper = document.getElementById('cropperWrapper');
+        const cropBtn = document.getElementById('cropBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultImage = document.getElementById('resultImage');
+
+        imageInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function (event) {
+                    imagePreview.src = event.target.result;
+                    cropperWrapper.classList.remove('hidden');
+                    cropBtn.classList.remove('hidden');
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    // Inisialisasi Cropper.js (misalnya aspect ratio poster film 2:3 agar pas)
+                    cropper = new Cropper(imagePreview, {
+                        aspectRatio: 2 / 3, // Atur perbandingan ukuran (misal 1:1 untuk kotak, atau 2:3 untuk poster)
+                        viewMode: 1,
+                        autoCropArea: 0.8,
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        cropBtn.addEventListener('click', () => {
+            if (!cropper) return;
+
+            // Dapatkan hasil crop dalam bentuk canvas (bisa diatur ukuran pixel maksimalnya agar tidak terlalu besar)
+            const canvas = cropper.getCroppedCanvas({
+                width: 600,
+                height: 900,
+            });
+
+            // Ubah canvas menjadi URL Base64 atau Blob untuk dikirim ke backend / database
+            const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+            // Tampilkan hasil preview
+            resultImage.src = croppedDataUrl;
+            resultContainer.classList.remove('hidden');
+
+            // Data `croppedDataUrl` ini yang nantinya bisa langsung dimasukkan ke variabel `image_url` saat admin menekan tombol "Simpan Film"
+            console.log("Base64 hasil crop siap digunakan:", croppedDataUrl);
+        });
+    </script>
+</body>
+</html>

@@ -43,7 +43,7 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header di Tengah -->
+        <!-- Header di Tengah, Tanpa Emoji/Simbol Panah -->
         <header class="mb-6 bg-[#ffdeeb] brutalist-card p-6 text-center space-y-3">
             <div class="max-w-xl mx-auto">
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight uppercase">PANEL ADMIN CROSSCORN</h1>
@@ -294,9 +294,26 @@
                 }
             };
 
+            // Kompresi otomatis gambar untuk mencegah error 413 Content Too Large
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => processSubmit(e.target.result);
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 500;
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height * scaleSize;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        processSubmit(compressedDataUrl);
+                    }
+                };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
                 processSubmit(imageUrl);

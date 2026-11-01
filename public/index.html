@@ -42,21 +42,20 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header Utama -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-[#fff3bf] brutalist-card p-5">
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">CROSSCORN 🍿</h1>
-                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-0.5">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
-            </div>
-            
-            <!-- Area Navigasi User & Admin -->
-            <div class="flex flex-wrap items-center gap-2">
-                <div id="userNavArea" class="flex items-center gap-2">
-                    <!-- Tombol Login / Info Akun dirender via JavaScript -->
-                </div>
+        <!-- Header dengan Judul & Tagline di Tengah, Tanpa Emoji -->
+        <header class="relative mb-8 bg-[#fff3bf] brutalist-card p-6 text-center">
+            <!-- Navigasi Kanan (Admin / User) diposisikan absolute di pojok kanan atas agar rapi -->
+            <div class="absolute top-4 right-4 flex items-center gap-2">
+                <div id="userNavArea" class="flex items-center gap-2"></div>
                 <a href="/admin.html" class="brutalist-btn px-3 py-1.5 bg-white font-semibold text-xs uppercase tracking-wide">
                     Admin →
                 </a>
+            </div>
+
+            <!-- Judul & Tagline di Tengah -->
+            <div class="max-w-xl mx-auto pt-2 sm:pt-0">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">CROSSCORN</h1>
+                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
             </div>
         </header>
 
@@ -104,7 +103,6 @@
     <script>
         let allMovies = [];
 
-        // Inisialisasi Status User Login di Navigasi Header
         function initUserNav() {
             const userNavArea = document.getElementById('userNavArea');
             const currentUser = localStorage.getItem('crosscorn_user');
@@ -112,7 +110,7 @@
             if (currentUser) {
                 userNavArea.innerHTML = `
                     <a href="/history.html" class="brutalist-btn px-3 py-1.5 bg-[#d0ebff] font-bold text-xs flex items-center gap-1">
-                        🎟️ Tiket Saya (${currentUser})
+                        Tiket Saya (${currentUser})
                     </a>
                     <button onclick="logoutUser()" class="brutalist-btn px-2.5 py-1.5 bg-[#ff8787] text-white font-bold text-xs">
                         Keluar
@@ -121,7 +119,7 @@
             } else {
                 userNavArea.innerHTML = `
                     <a href="/login.html" class="brutalist-btn px-3 py-1.5 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide">
-                        Login User
+                        Login
                     </a>
                 `;
             }

@@ -43,15 +43,17 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 bg-[#ffdeeb] brutalist-card p-5">
-            <div>
-                <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Panel Admin CROSSCORN 🛠️</h1>
-                <p class="font-medium text-xs text-slate-700 mt-0.5">Kelola film, ubah sinopsis, dan atur transaksi.</p>
+        <!-- Header dengan Judul & Tagline di Tengah, Tanpa Emoji -->
+        <header class="relative mb-6 bg-[#ffdeeb] brutalist-card p-6 text-center">
+            <div class="absolute top-4 left-4">
+                <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
+                    ← Beranda
+                </a>
             </div>
-            <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
-                ← Ke Beranda
-            </a>
+            <div class="max-w-xl mx-auto pt-2 sm:pt-0">
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight uppercase">PANEL ADMIN CROSSCORN</h1>
+                <p class="font-medium text-xs text-slate-700 mt-1">Kelola film, ubah sinopsis, dan atur transaksi dengan mudah.</p>
+            </div>
         </header>
 
         <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-2.5 border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-bold"></div>
@@ -97,7 +99,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Daftar Film -->
                 <div class="brutalist-card overflow-hidden bg-white">
-                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film Tersedia & Opsi Edit Sinopsis</div>
+                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film Tersedia & Edit Sinopsis</div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
@@ -247,7 +249,6 @@
             const fileInput = document.getElementById('movieFile');
             let imageUrl = "https://via.placeholder.com/300x450?text=No+Image";
 
-            // Jika sedang edit, ambil gambar lama jika tidak upload baru
             if(editId) {
                 const existing = cachedMovies.find(m => m.id == editId);
                 if(existing) imageUrl = existing.image_url;
@@ -268,8 +269,6 @@
                 try {
                     let response;
                     if(editId) {
-                        // PUT / PATCH atau endpoint update jika tersedia, atau hapus lalu buat baru / metode API Supabase
-                        // Menggunakan endpoint POST dengan ID atau penyesuaian API backend Vercel yang ada
                         response = await fetch(`/api/movies?id=${editId}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },

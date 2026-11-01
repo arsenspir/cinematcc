@@ -3,42 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CROSSCORN - Neo-Brutalism Cinema</title>
+    <title>CROSSCORN - Beranda Bioskop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .neo-box {
-            border: 3px solid #000;
-            box-shadow: 4px 4px 0px #000;
+        .brutalist-card {
+            background: #ffffff;
+            border: 3px solid #000000;
+            box-shadow: 6px 6px 0px #000000;
             transition: all 0.1s ease;
         }
-        .neo-box:hover {
+        .brutalist-card:hover {
             transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #000;
+            box-shadow: 8px 8px 0px #000000;
         }
-        .neo-button {
-            border: 3px solid #000;
-            box-shadow: 3px 3px 0px #000;
+        .brutalist-btn {
+            border: 3px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
             transition: all 0.1s ease;
         }
-        .neo-button:hover {
+        .brutalist-btn:hover {
             transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0px #000;
+            box-shadow: 6px 6px 0px #000000;
         }
-        .neo-button:active {
+        .brutalist-btn:active {
             transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #000;
+            box-shadow: 2px 2px 0px #000000;
         }
     </style>
 </head>
 <body class="bg-[#f4f4f0] text-black min-h-screen p-4 sm:p-10 font-sans">
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-yellow-400 neo-box p-6 rounded-xl">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-yellow-400 brutalist-card p-6 rounded-2xl">
             <div>
                 <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tight">CROSSCORN 🍿</h1>
-                <p class="text-black font-semibold text-sm mt-1">Pilih film, lihat sinopsis, dan amankan kursimu sekarang!</p>
+                <p class="font-bold text-xs sm:text-sm mt-1">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
             </div>
-            <a href="/admin.html" class="neo-button px-5 py-2.5 bg-white font-bold text-sm rounded-lg uppercase tracking-wider">
+            <a href="/admin.html" class="brutalist-btn px-5 py-2.5 bg-white font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
                 Panel Admin →
             </a>
         </header>
@@ -50,9 +51,9 @@
     </div>
 
     <!-- Modal Detail Film -->
-    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white neo-box max-w-lg w-full overflow-hidden rounded-2xl relative">
-            <button onclick="closeMovieModal()" class="absolute top-4 right-4 z-10 w-9 h-9 bg-red-500 neo-button font-black rounded-lg flex items-center justify-center text-white">
+    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="brutalist-card max-w-lg w-full overflow-hidden rounded-2xl relative bg-white">
+            <button onclick="closeMovieModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-red-500 text-white border-2 border-black font-black rounded-lg flex items-center justify-center shadow-[2px_2px_0px_#000]">
                 ✕
             </button>
             <div class="h-60 sm:h-72 w-full bg-slate-200 border-b-3 border-black relative">
@@ -61,21 +62,21 @@
             <div class="p-6 space-y-4">
                 <div>
                     <h2 id="modalTitle" class="text-2xl font-black uppercase"></h2>
-                    <p id="modalPrice" class="text-indigo-600 font-extrabold text-base mt-1"></p>
+                    <p id="modalPrice" class="text-indigo-700 font-extrabold text-base mt-1"></p>
                 </div>
-                <div class="grid grid-cols-2 gap-3 bg-cyan-200 neo-box p-4 rounded-xl text-xs font-bold">
+                <div class="grid grid-cols-2 gap-3 bg-[#f4f4f0] border-3 border-black p-4 rounded-xl shadow-[3px_3px_0px_#000] text-xs font-bold">
                     <div>
-                        <span class="text-black/70 block uppercase">Durasi</span>
-                        <span id="modalDuration" class="text-sm">120 Menit</span>
+                        <span class="text-slate-600 block uppercase">Durasi</span>
+                        <span id="modalDuration" class="text-sm font-black">120 Menit</span>
                     </div>
                     <div>
-                        <span class="text-black/70 block uppercase">Kursi Tersedia</span>
-                        <span id="modalSeats" class="text-sm text-emerald-700">30 Kursi</span>
+                        <span class="text-slate-600 block uppercase">Kursi Tersedia</span>
+                        <span id="modalSeats" class="text-sm font-black text-emerald-700">30 Kursi</span>
                     </div>
                 </div>
                 <div>
                     <h3 class="text-xs font-black uppercase tracking-wider mb-1">Sinopsis</h3>
-                    <p id="modalSynopsis" class="text-xs sm:text-sm text-black/80 font-medium leading-relaxed">
+                    <p id="modalSynopsis" class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">
                         Sinopsis belum tersedia.
                     </p>
                 </div>
@@ -96,39 +97,36 @@
                 if (!response.ok) throw new Error("Gagal mengambil data film.");
 
                 if (allMovies.length === 0) {
-                    container.innerHTML = `<div class="col-span-full text-center font-bold py-10 bg-white neo-box rounded-xl p-8">Belum ada film yang tersedia saat ini.</div>`;
+                    container.innerHTML = `<div class="col-span-full text-center font-bold py-10 brutalist-card rounded-2xl p-8 bg-white">Belum ada film yang tersedia saat ini.</div>`;
                     return;
                 }
 
-                const cardColors = ['bg-pink-300', 'bg-cyan-300', 'bg-emerald-300', 'bg-purple-300', 'bg-amber-300'];
-
-                container.innerHTML = allMovies.map((m, index) => {
+                container.innerHTML = allMovies.map(m => {
                     const totalSeats = m.seats !== undefined ? m.seats : (m.total_seats || 30);
                     const isAvailable = totalSeats > 0;
-                    const bgHeaderColor = cardColors[index % cardColors.length];
 
                     return `
-                        <div class="bg-white neo-box rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group" onclick="openMovieModal('${m.id}')">
+                        <div class="brutalist-card rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group bg-white" onclick="openMovieModal('${m.id}')">
                             <div>
-                                <div class="h-64 w-full ${bgHeaderColor} border-b-3 border-black relative overflow-hidden">
+                                <div class="h-64 w-full bg-yellow-100 border-b-3 border-black relative overflow-hidden">
                                     <img src="${m.image_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
-                                    <span class="absolute top-3 right-3 px-3 py-1 bg-white border-2 border-black font-extrabold text-xs rounded-lg shadow-[2px_2px_0px_#000] ${isAvailable ? 'text-emerald-700' : 'text-red-600'}">
+                                    <span class="absolute top-3 right-3 px-3 py-1 bg-white border-2 border-black font-black text-xs rounded-lg shadow-[2px_2px_0px_#000] ${isAvailable ? 'text-emerald-700' : 'text-red-600'}">
                                         ${isAvailable ? `${totalSeats} Kursi` : 'Habis'}
                                     </span>
                                 </div>
                                 <div class="p-5">
                                     <h3 class="text-xl font-black uppercase tracking-tight">${m.title}</h3>
-                                    <p class="text-sm font-extrabold text-indigo-600 mt-1">Rp ${Number(m.price || 0).toLocaleString('id-ID')} / tiket</p>
-                                    <p class="text-xs font-bold text-black/60 mt-2 underline">Klik untuk lihat detail & sinopsis →</p>
+                                    <p class="text-sm font-extrabold text-indigo-700 mt-1">Rp ${Number(m.price || 0).toLocaleString('id-ID')} / tiket</p>
+                                    <p class="text-xs font-bold text-slate-600 mt-2 underline">Klik untuk lihat detail & sinopsis →</p>
                                 </div>
                             </div>
                             <div class="p-5 pt-0">
                                 ${isAvailable ? `
-                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-3 bg-yellow-400 neo-button font-black text-sm rounded-xl uppercase tracking-wider">
+                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-3 bg-[#7ec8e3] brutalist-btn font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
                                         Pesan Tiket
                                     </button>
                                 ` : `
-                                    <button disabled class="w-full py-3 bg-slate-200 border-3 border-black font-bold text-sm rounded-xl text-slate-500 cursor-not-allowed">
+                                    <button disabled class="w-full py-3 bg-slate-200 border-3 border-black font-bold text-xs sm:text-sm rounded-xl text-slate-500 cursor-not-allowed">
                                         Tiket Habis
                                     </button>
                                 `}
@@ -139,7 +137,7 @@
 
             } catch (err) {
                 console.error("Error:", err);
-                container.innerHTML = `<div class="col-span-full text-center font-bold text-red-600 py-10 bg-white neo-box rounded-xl">Gagal memuat film: ${err.message}</div>`;
+                container.innerHTML = `<div class="col-span-full text-center font-bold text-red-600 py-10 brutalist-card rounded-2xl bg-white">Gagal memuat film: ${err.message}</div>`;
             }
         }
 
@@ -159,13 +157,13 @@
             const actionContainer = document.getElementById('modalAction');
             if (isAvailable) {
                 actionContainer.innerHTML = `
-                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-3.5 bg-yellow-400 neo-button font-black text-sm rounded-xl uppercase tracking-wider">
+                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-3 bg-[#7ec8e3] brutalist-btn font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
                         Pesan Kursi Sekarang
                     </button>
                 `;
             } else {
                 actionContainer.innerHTML = `
-                    <button disabled class="w-full py-3.5 bg-slate-200 border-3 border-black font-bold text-sm rounded-xl text-slate-500 cursor-not-allowed">
+                    <button disabled class="w-full py-3 bg-slate-200 border-3 border-black font-bold text-xs sm:text-sm rounded-xl text-slate-500 cursor-not-allowed">
                         Tiket Habis
                     </button>
                 `;

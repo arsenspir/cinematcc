@@ -3,96 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Cinematcc</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Admin Panel - CROSSCORN</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .neo-box {
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+        }
+        .neo-button {
+            border: 3px solid #000;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
+        }
+        .neo-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000;
+        }
+        .neo-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6 sm:p-10">
+<body class="bg-[#f4f4f0] text-black min-h-screen p-4 sm:p-10 font-sans">
     <div class="max-w-6xl mx-auto">
-        <!-- Header dengan Navigasi Panah yang Rapi -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-slate-900/50 border border-slate-800/80 p-6 rounded-2xl backdrop-blur">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-pink-300 neo-box p-6 rounded-xl">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Panel Admin Bioskop</h1>
-                <p class="text-slate-400 text-sm mt-1">Kelola inventaris film, atur kapasitas kursi, dan pantau transaksi.</p>
+                <h1 class="text-2xl sm:text-3xl font-black uppercase">Panel Admin CROSSCORN 🛠️</h1>
+                <p class="font-bold text-xs sm:text-sm mt-1">Kelola daftar film, atur jumlah kursi, dan hapus transaksi.</p>
             </div>
-            <a href="/" class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700/50 rounded-xl text-sm font-medium transition shadow-sm group">
-                <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Ke Beranda Utama
+            <a href="/" class="neo-button px-4 py-2 bg-yellow-400 font-bold text-xs uppercase rounded-xl">
+                ← Ke Beranda
             </a>
         </header>
 
-        <!-- Toast Notifikasi Custom -->
-        <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl border transition-all duration-300"></div>
+        <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 neo-box rounded-xl text-xs sm:text-sm font-black"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Kolom Kiri: Form Tambah Film -->
-            <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 shadow-xl h-fit">
-                <h2 class="text-lg font-semibold mb-4 text-indigo-400 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                    Tambah Film Baru
-                </h2>
+            <!-- Form Tambah Film -->
+            <div class="bg-white neo-box rounded-2xl p-6 h-fit">
+                <h2 class="text-lg font-black uppercase mb-4 text-black">Tambah Film Baru</h2>
                 <form id="addMovieForm" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Judul Film</label>
-                        <input type="text" id="movieTitle" required placeholder="Contoh: Interstellar" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+                        <label class="block text-xs font-black uppercase mb-1">Judul Film</label>
+                        <input type="text" id="movieTitle" required placeholder="Contoh: Interstellar" class="w-full bg-[#f4f4f0] border-3 border-black rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:bg-white shadow-[2px_2px_0px_#000]">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Harga Tiket (Rp)</label>
-                        <input type="number" id="moviePrice" required placeholder="50000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+                        <label class="block text-xs font-black uppercase mb-1">Harga Tiket (Rp)</label>
+                        <input type="number" id="moviePrice" required placeholder="50000" class="w-full bg-[#f4f4f0] border-3 border-black rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:bg-white shadow-[2px_2px_0px_#000]">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Jumlah Total Kursi</label>
-                        <input type="number" id="movieSeats" required placeholder="30" value="30" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+                        <label class="block text-xs font-black uppercase mb-1">Jumlah Total Kursi</label>
+                        <input type="number" id="movieSeats" required value="48" class="w-full bg-[#f4f4f0] border-3 border-black rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:bg-white shadow-[2px_2px_0px_#000]">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Pilih Berkas Poster (File Lokal)</label>
-                        <input type="file" id="movieFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-indigo-400 hover:file:bg-slate-700 cursor-pointer">
+                        <label class="block text-xs font-black uppercase mb-1">Poster Film (File Lokal)</label>
+                        <input type="file" id="movieFile" accept="image/*" class="w-full text-xs font-bold file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-2 file:border-black file:bg-yellow-400 file:font-black cursor-pointer">
                     </div>
-                    <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium text-sm transition shadow-lg shadow-indigo-600/20">
+                    <button type="submit" id="submitBtn" class="w-full py-3 bg-cyan-300 neo-button font-black text-xs uppercase rounded-xl">
                         Simpan Film
                     </button>
                 </form>
             </div>
 
-            <!-- Kolom Kanan: Daftar Film & Daftar Booking -->
+            <!-- Tabel Data -->
             <div class="lg:col-span-2 space-y-8">
-                <!-- Tabel Daftar Film -->
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl">
-                    <div class="p-5 border-b border-slate-800 font-semibold text-lg">Daftar Film Tersedia</div>
+                <!-- Daftar Film -->
+                <div class="bg-white neo-box rounded-2xl overflow-hidden">
+                    <div class="p-4 bg-purple-300 border-b-3 border-black font-black uppercase text-sm">Daftar Film Tersedia</div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left">
                             <thead>
-                                <tr class="bg-slate-800/40 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
-                                    <th class="p-4">Judul</th>
-                                    <th class="p-4">Harga</th>
-                                    <th class="p-4">Kursi Tersisa</th>
-                                    <th class="p-4 text-center">Aksi</th>
+                                <tr class="bg-slate-100 border-b-3 border-black text-xs font-black uppercase">
+                                    <th class="p-3">Judul</th>
+                                    <th class="p-3">Harga</th>
+                                    <th class="p-3">Sisa Kursi</th>
+                                    <th class="p-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="moviesTableBody" class="divide-y divide-slate-800/60 text-sm">
-                                <tr><td colspan="4" class="p-6 text-center text-slate-400">Memuat data film...</td></tr>
+                            <tbody id="moviesTableBody" class="divide-y-2 divide-black text-xs font-bold">
+                                <tr><td colspan="4" class="p-4 text-center">Memuat film...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Tabel Transaksi Booking -->
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl">
-                    <div class="p-5 border-b border-slate-800 font-semibold text-lg">Daftar Transaksi Pemesanan</div>
+                <!-- Daftar Transaksi -->
+                <div class="bg-white neo-box rounded-2xl overflow-hidden">
+                    <div class="p-4 bg-emerald-300 border-b-3 border-black font-black uppercase text-sm">Daftar Pemesanan Tiket</div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left">
                             <thead>
-                                <tr class="bg-slate-800/40 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
-                                    <th class="p-4">ID</th>
-                                    <th class="p-4">Nama Pemesan</th>
-                                    <th class="p-4">Film</th>
-                                    <th class="p-4">Kursi</th>
-                                    <th class="p-4">Total Harga</th>
-                                    <th class="p-4 text-center">Aksi</th>
+                                <tr class="bg-slate-100 border-b-3 border-black text-xs font-black uppercase">
+                                    <th class="p-3">Nama</th>
+                                    <th class="p-3">Film</th>
+                                    <th class="p-3">Kursi</th>
+                                    <th class="p-3">Total</th>
+                                    <th class="p-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="bookingsTableBody" class="divide-y divide-slate-800/60 text-sm">
-                                <tr><td colspan="6" class="p-6 text-center text-slate-400">Memuat data pemesanan...</td></tr>
+                            <tbody id="bookingsTableBody" class="divide-y-2 divide-black text-xs font-bold">
+                                <tr><td colspan="5" class="p-4 text-center">Memuat pesanan...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -101,13 +113,12 @@
         </div>
     </div>
 
-    <!-- Script JavaScript -->
     <script>
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl border transition-all duration-300 ${
-                type === 'success' ? 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200' : 'bg-red-950/90 border-red-500/50 text-red-200'
+            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 neo-box rounded-xl text-xs font-black ${
+                type === 'success' ? 'bg-emerald-300' : 'bg-red-400'
             }`;
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 3000);
@@ -118,70 +129,59 @@
             const bookingsBody = document.getElementById('bookingsTableBody');
 
             try {
-                // Fetch Movies
                 const resMovies = await fetch('/api/movies');
                 const movies = await resMovies.json();
-                if (movies.length === 0) {
-                    moviesBody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Belum ada film.</td></tr>`;
-                } else {
-                    moviesBody.innerHTML = movies.map(m => `
-                        <tr class="hover:bg-slate-800/30 transition">
-                            <td class="p-4 font-medium">${m.title}</td>
-                            <td class="p-4">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-indigo-500/10 text-indigo-400 rounded-lg text-xs font-semibold">${m.seats !== undefined ? m.seats : (m.total_seats || 30)} Kursi</span></td>
-                            <td class="p-4 text-center">
-                                <button onclick="deleteMovie('${m.id}')" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-lg text-xs font-medium transition">Hapus</button>
+                moviesBody.innerHTML = movies.length === 0 
+                    ? `<tr><td colspan="4" class="p-4 text-center">Belum ada film.</td></tr>`
+                    : movies.map(m => `
+                        <tr>
+                            <td class="p-3 uppercase">${m.title}</td>
+                            <td class="p-3">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
+                            <td class="p-3"><span class="px-2 py-1 bg-yellow-300 border-2 border-black rounded text-[10px]">${m.seats !== undefined ? m.seats : 48} Kursi</span></td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteMovie('${m.id}')" class="px-2.5 py-1 bg-red-500 text-white neo-button text-[10px] uppercase rounded">Hapus</button>
                             </td>
                         </tr>
                     `).join('');
-                }
 
-                // Fetch Bookings
                 const resBookings = await fetch('/api/bookings');
                 const bookings = await resBookings.json();
-                if (bookings.length === 0) {
-                    bookingsBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Belum ada data pemesanan.</td></tr>`;
-                } else {
-                    bookingsBody.innerHTML = bookings.map(b => `
-                        <tr class="hover:bg-slate-800/30 transition">
-                            <td class="p-4 font-mono text-xs text-slate-400">${b.id}</td>
-                            <td class="p-4 font-medium">${b.customer_name || '-'}</td>
-                            <td class="p-4">${b.movie_title || '-'}</td>
-                            <td class="p-4"><span class="px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded-lg text-xs font-semibold">${b.seats || '-'}</span></td>
-                            <td class="p-4">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
-                            <td class="p-4 text-center">
-                                <button onclick="deleteBooking('${b.id}')" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-lg text-xs font-medium transition">Hapus</button>
+                bookingsBody.innerHTML = bookings.length === 0 
+                    ? `<tr><td colspan="5" class="p-4 text-center">Belum ada transaksi.</td></tr>`
+                    : bookings.map(b => `
+                        <tr>
+                            <td class="p-3">${b.customer_name || '-'}</td>
+                            <td class="p-3 uppercase">${b.movie_title || '-'}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 bg-cyan-200 border-2 border-black rounded text-[10px]">${b.seats || '-'}</span></td>
+                            <td class="p-3">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteBooking('${b.id}')" class="px-2.5 py-1 bg-red-500 text-white neo-button text-[10px] uppercase rounded">Hapus</button>
                             </td>
                         </tr>
                     `).join('');
-                }
             } catch (err) {
                 console.error("Gagal memuat data:", err);
             }
         }
 
         async function deleteMovie(id) {
-            if (!confirm("Yakin ingin menghapus film ini?")) return;
+            if (!confirm("Hapus film ini?")) return;
             try {
                 const res = await fetch(`/api/movies?id=${id}`, { method: 'DELETE' });
-                if (!res.ok) throw new Error("Gagal menghapus film.");
+                if (!res.ok) throw new Error("Gagal menghapus.");
                 showToast("Film berhasil dihapus!");
                 fetchAdminData();
-            } catch (err) {
-                showToast(err.message, 'error');
-            }
+            } catch (err) { showToast(err.message, 'error'); }
         }
 
         async function deleteBooking(id) {
-            if (!confirm("Yakin ingin menghapus pesanan ini? Kursi akan dikembalikan ke film.")) return;
+            if (!confirm("Hapus pesanan ini? Kursi akan dikembalikan.")) return;
             try {
                 const res = await fetch(`/api/bookings?id=${id}`, { method: 'DELETE' });
-                if (!res.ok) throw new Error("Gagal menghapus pesanan.");
+                if (!res.ok) throw new Error("Gagal menghapus.");
                 showToast("Pesanan dihapus & kursi dikembalikan!");
                 fetchAdminData();
-            } catch (err) {
-                showToast(err.message, 'error');
-            }
+            } catch (err) { showToast(err.message, 'error'); }
         }
 
         document.getElementById('addMovieForm').addEventListener('submit', async (e) => {
@@ -208,7 +208,7 @@
                         body: JSON.stringify(newMovie)
                     });
                     if (!response.ok) throw new Error("Gagal menambah film.");
-                    showToast("Film berhasil ditambahkan!");
+                    showToast("Film ditambahkan!");
                     document.getElementById('addMovieForm').reset();
                     fetchAdminData();
                 } catch (err) {

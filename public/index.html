@@ -42,62 +42,21 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header dengan Judul, Tagline, dan Menu di Tengah -->
+        <!-- Header di Tengah, Tanpa Emoji/Simbol Panah -->
         <header class="mb-8 bg-[#fff3bf] brutalist-card p-6 text-center space-y-4">
             <div class="max-w-xl mx-auto">
                 <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">CROSSCORN</h1>
-                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang</p>
+                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih jadwal tayang film hari ini dan amankan kursimu</p>
             </div>
             
             <div id="userNavArea" class="flex flex-wrap items-center justify-center gap-2 pt-1">
-                <!-- Navigasi User / Login / Tiket & Admin dirender di tengah -->
+                <!-- Navigasi User / Login / Tiket & Admin -->
             </div>
         </header>
 
         <!-- Container Daftar Film -->
         <div id="moviesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div class="col-span-full text-center text-xs font-semibold py-10">Memuat daftar film...</div>
-        </div>
-    </div>
-
-    <!-- Modal Detail Film -->
-    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/30 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="brutalist-card max-w-md w-full overflow-hidden relative bg-white">
-            <button onclick="closeMovieModal()" class="absolute top-3 right-3 z-10 w-7 h-7 bg-[#ff6b6b] text-white border-2 border-black font-bold text-xs flex items-center justify-center shadow-[2px_2px_0px_#000]">
-                X
-            </button>
-            <div class="h-52 sm:h-60 w-full bg-[#f1f3f5] border-b-2 border-black relative">
-                <img id="modalImage" src="" alt="Poster" class="w-full h-full object-cover">
-            </div>
-            <div class="p-5 space-y-3">
-                <div>
-                    <h2 id="modalTitle" class="text-xl font-bold tracking-tight text-slate-900"></h2>
-                    <p id="modalPrice" class="text-indigo-600 font-bold text-xs mt-0.5"></p>
-                </div>
-                <div class="grid grid-cols-2 gap-2 bg-[#f8f9fa] border-2 border-black p-3 shadow-[2px_2px_0px_#000] text-[11px]">
-                    <div>
-                        <span class="text-slate-500 block">Durasi</span>
-                        <span id="modalDuration" class="font-bold text-slate-900">120 Menit</span>
-                    </div>
-                    <div>
-                        <span class="text-slate-500 block">Kursi Tersedia</span>
-                        <span id="modalSeats" class="font-bold text-emerald-700">30 Kursi</span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Jadwal Tayang</h3>
-                    <p id="modalSchedule" class="text-xs font-bold text-indigo-700 bg-[#e7f5ff] p-2 border border-black mb-2">
-                        Belum ada jadwal.
-                    </p>
-                </div>
-                <div>
-                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Sinopsis</h3>
-                    <p id="modalSynopsis" class="text-xs text-slate-700 leading-relaxed font-normal">
-                        Sinopsis belum tersedia.
-                    </p>
-                </div>
-                <div id="modalAction" class="pt-1"></div>
-            </div>
         </div>
     </div>
 
@@ -154,32 +113,46 @@
                 container.innerHTML = allMovies.map(m => {
                     const totalSeats = m.seats !== undefined ? m.seats : (m.total_seats || 30);
                     const isAvailable = totalSeats > 0;
-                    const scheduleText = m.schedule || '13:00, 16:00, 19:00';
+                    
+                    // Pecah jadwal tayang (misal: "13:00, 16:00, 19:00") menjadi tombol-tombol jam
+                    const rawSchedule = m.schedule || '13:00, 16:00, 19:00';
+                    const scheduleList = rawSchedule.split(',').map(s => s.trim());
+
+                    let scheduleButtonsHTML = scheduleList.map(time => `
+                        <a href="/book.html?movie=${encodeURIComponent(m.title)}&time=${encodeURIComponent(time)}" 
+                           class="px-2.5 py-1 bg-[#fff3bf] border border-black text-[11px] font-bold shadow-[1.5px_1.5px_0px_#000] hover:bg-[#ffe066] transition">
+                            ${time}
+                        </a>
+                    `).join('');
 
                     return `
-                        <div class="brutalist-card overflow-hidden flex flex-col justify-between cursor-pointer group bg-white" onclick="openMovieModal('${m.id}')">
+                        <div class="brutalist-card overflow-hidden flex flex-col justify-between bg-white">
                             <div>
                                 <div class="h-56 w-full bg-[#f1f3f5] border-b-2 border-black relative overflow-hidden">
-                                    <img src="${m.image_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
+                                    <img src="${m.image_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${m.title}" class="w-full h-full object-cover">
                                     <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 bg-white border-2 border-black font-bold text-[10px] shadow-[2px_2px_0px_#000] ${isAvailable ? 'text-emerald-700' : 'text-red-600'}">
                                         ${isAvailable ? `${totalSeats} Kursi` : 'Habis'}
                                     </span>
                                 </div>
-                                <div class="p-4 space-y-1">
-                                    <h3 class="text-base font-bold text-slate-900 tracking-tight leading-snug">${m.title}</h3>
-                                    <p class="text-xs font-bold text-indigo-600">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</p>
-                                    <p class="text-[10px] bg-[#fff3bf] border border-black px-1.5 py-0.5 inline-block font-bold">Jadwal: ${scheduleText}</p>
-                                    <p class="text-[11px] font-medium text-slate-500 pt-1 underline">Lihat Detail & Sinopsis</p>
+                                <div class="p-4 space-y-2">
+                                    <h3 class="text-base font-bold text-slate-900 tracking-tight leading-snug uppercase">${m.title}</h3>
+                                    
+                                    <div>
+                                        <span class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Jadwal Tayang Hari Ini:</span>
+                                        <div class="flex flex-wrap gap-1.5">
+                                            ${isAvailable ? scheduleButtonsHTML : '<span class="text-xs text-red-600 font-bold">Tiket Habis</span>'}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="p-4 pt-0">
                                 ${isAvailable ? `
-                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-2 bg-[#99e9f2] brutalist-btn font-bold text-xs tracking-wide">
+                                    <a href="/book.html?movie=${encodeURIComponent(m.title)}" class="block text-center w-full py-2 bg-[#99e9f2] brutalist-btn font-bold text-xs tracking-wide uppercase">
                                         Pesan Tiket
-                                    </button>
+                                    </a>
                                 ` : `
-                                    <button disabled class="w-full py-2 bg-[#e9ecef] border-2 border-black font-semibold text-xs text-slate-400 cursor-not-allowed">
-                                        Tiket Habis
+                                    <button disabled class="w-full py-2 bg-[#e9ecef] border-2 border-black font-semibold text-xs text-slate-400 cursor-not-allowed uppercase">
+                                        Habis
                                     </button>
                                 `}
                             </div>
@@ -191,47 +164,6 @@
                 console.error("Error:", err);
                 container.innerHTML = `<div class="col-span-full text-center text-xs font-semibold text-red-600 py-8 brutalist-card bg-white">Gagal memuat film: ${err.message}</div>`;
             }
-        }
-
-        function openMovieModal(movieId) {
-            const movie = allMovies.find(m => m.id == movieId);
-            if (!movie) return;
-
-            const totalSeats = movie.seats !== undefined ? movie.seats : (movie.total_seats || 30);
-            const isAvailable = totalSeats > 0;
-
-            document.getElementById('modalImage').src = movie.image_url || 'https://via.placeholder.com/300x450?text=No+Image';
-            document.getElementById('modalTitle').textContent = movie.title;
-            document.getElementById('modalPrice').textContent = `Rp ${Number(movie.price || 0).toLocaleString('id-ID')} / tiket`;
-            document.getElementById('modalSeats').textContent = `${totalSeats} Kursi Tersedia`;
-            document.getElementById('modalSchedule').textContent = movie.schedule || '13:00, 16:00, 19:00';
-            document.getElementById('modalSynopsis').textContent = movie.synopsis || `Film ${movie.title} menghadirkan pengalaman sinematik yang memukau. Pilih kursi terbaikmu sekarang!`;
-
-            const actionContainer = document.getElementById('modalAction');
-            if (isAvailable) {
-                actionContainer.innerHTML = `
-                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-2.5 bg-[#99e9f2] brutalist-btn font-bold text-xs tracking-wide">
-                        Pesan Kursi Sekarang
-                    </button>
-                `;
-            } else {
-                actionContainer.innerHTML = `
-                    <button disabled class="w-full py-2.5 bg-[#e9ecef] border-2 border-black font-semibold text-xs text-slate-400 cursor-not-allowed">
-                        Tiket Habis
-                    </button>
-                `;
-            }
-
-            document.getElementById('movieModal').classList.remove('hidden');
-        }
-
-        function closeMovieModal() {
-            document.getElementById('movieModal').classList.add('hidden');
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('movieModal');
-            if (event.target === modal) closeMovieModal();
         }
 
         initUserNav();

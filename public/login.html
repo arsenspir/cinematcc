@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CROSSCORN</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Gaya Neo-Brutalism Khas Referensi Saweria */
+        .brutalist-card {
+            background: #ffffff;
+            border: 3px solid #000000;
+            box-shadow: 8px 8px 0px #000000;
+        }
+        .brutalist-input {
+            border: 2px solid #000000;
+            background: #ffffff;
+            transition: all 0.1s ease;
+        }
+        .brutalist-input:focus {
+            outline: none;
+            box-shadow: 3px 3px 0px #000000;
+        }
+        .brutalist-btn {
+            border: 3px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.1s ease;
+        }
+        .brutalist-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .brutalist-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .cloudflare-box {
+            border: 2px solid #000000;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body class="bg-[#f4f4f0] text-black min-h-screen flex items-center justify-center p-4 font-sans">
+
+    <!-- Toast Notifikasi -->
+    <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 border-3 border-black shadow-[4px_4px_0px_#000] rounded-xl text-xs sm:text-sm font-bold"></div>
+
+    <!-- Kartu Login Utama -->
+    <div class="brutalist-card max-w-md w-full rounded-2xl p-8 sm:p-10 relative">
+        
+        <!-- Logo / Maskot Brand CROSSCORN -->
+        <div class="text-center mb-6">
+            <div class="inline-block bg-yellow-400 border-3 border-black px-4 py-2 rounded-xl shadow-[3px_3px_0px_#000] mb-3">
+                <span class="text-2xl font-black tracking-wider">🍿 CROSSCORN</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight mt-2">Login</h1>
+        </div>
+
+        <!-- Form Login -->
+        <form id="loginForm" class="space-y-5">
+            <!-- Input Email -->
+            <div>
+                <label class="block text-xs font-black uppercase tracking-wider mb-1">
+                    Email: <span class="text-red-600">*</span>
+                </label>
+                <input type="email" id="email" required placeholder="email@example.com" 
+                    class="brutalist-input w-full rounded-xl px-3.5 py-2.5 text-sm font-medium placeholder:text-slate-400">
+                <!-- Contoh pesan error validasi opsional -->
+                <!-- <p class="text-xs text-red-600 font-bold mt-1">Email tidak boleh kosong</p> -->
+            </div>
+
+            <!-- Input Password -->
+            <div>
+                <label class="block text-xs font-black uppercase tracking-wider mb-1">
+                    Password: <span class="text-red-600">*</span>
+                </label>
+                <div class="relative">
+                    <input type="password" id="password" required placeholder="••••••••" 
+                        class="brutalist-input w-full rounded-xl px-3.5 py-2.5 text-sm font-medium pr-10">
+                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-black text-xs font-bold">
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Widget Verifikasi ala Cloudflare Turnstile (Sesuai Referensi) -->
+            <div class="cloudflare-box flex items-center justify-between p-3 rounded-xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-emerald-500 border-2 border-black flex items-center justify-center text-white font-bold rounded shadow-[2px_2px_0px_#000]">
+                        ✓
+                    </div>
+                    <span class="text-xs font-black">Berhasil!</span>
+                </div>
+                <div class="text-right">
+                    <span class="block text-[10px] font-black uppercase tracking-tighter">CLOUDFLARE</span>
+                    <span class="text-[9px] text-slate-500 underline cursor-pointer">Privasi • Bantuan</span>
+                </div>
+            </div>
+
+            <!-- Bagian Bawah: Lupa Password & Tombol Masuk -->
+            <div class="flex items-center justify-between pt-2">
+                <a href="#" class="text-xs font-bold text-slate-700 hover:text-black underline">Lupa Password</a>
+                
+                <button type="submit" class="brutalist-btn px-6 py-2.5 bg-[#7ec8e3] text-black font-black text-xs sm:text-sm rounded-xl uppercase tracking-wider">
+                    Masuk
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 border-3 border-black shadow-[4px_4px_0px_#000] rounded-xl text-xs sm:text-sm font-black ${
+                type === 'success' ? 'bg-emerald-300 text-black' : 'bg-red-400 text-black'
+            }`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            showToast(`Login berhasil untuk ${email}!`);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

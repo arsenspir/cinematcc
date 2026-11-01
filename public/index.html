@@ -42,20 +42,15 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header dengan Judul & Tagline di Tengah, Tanpa Emoji -->
-        <header class="relative mb-8 bg-[#fff3bf] brutalist-card p-6 text-center">
-            <!-- Navigasi Kanan (Admin / User) diposisikan absolute di pojok kanan atas agar rapi -->
-            <div class="absolute top-4 right-4 flex items-center gap-2">
-                <div id="userNavArea" class="flex items-center gap-2"></div>
-                <a href="/admin.html" class="brutalist-btn px-3 py-1.5 bg-white font-semibold text-xs uppercase tracking-wide">
-                    Admin →
-                </a>
-            </div>
-
-            <!-- Judul & Tagline di Tengah -->
-            <div class="max-w-xl mx-auto pt-2 sm:pt-0">
+        <!-- Header dengan Judul, Tagline, dan Menu di Tengah -->
+        <header class="mb-8 bg-[#fff3bf] brutalist-card p-6 text-center space-y-4">
+            <div class="max-w-xl mx-auto">
                 <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">CROSSCORN</h1>
-                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
+                <p class="text-slate-700 font-medium text-xs sm:text-sm mt-1">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang</p>
+            </div>
+            
+            <div id="userNavArea" class="flex flex-wrap items-center justify-center gap-2 pt-1">
+                <!-- Navigasi User / Login / Tiket & Admin dirender di tengah -->
             </div>
         </header>
 
@@ -69,7 +64,7 @@
     <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/30 backdrop-blur-xs flex items-center justify-center p-4">
         <div class="brutalist-card max-w-md w-full overflow-hidden relative bg-white">
             <button onclick="closeMovieModal()" class="absolute top-3 right-3 z-10 w-7 h-7 bg-[#ff6b6b] text-white border-2 border-black font-bold text-xs flex items-center justify-center shadow-[2px_2px_0px_#000]">
-                ✕
+                X
             </button>
             <div class="h-52 sm:h-60 w-full bg-[#f1f3f5] border-b-2 border-black relative">
                 <img id="modalImage" src="" alt="Poster" class="w-full h-full object-cover">
@@ -90,6 +85,12 @@
                     </div>
                 </div>
                 <div>
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Jadwal Tayang</h3>
+                    <p id="modalSchedule" class="text-xs font-bold text-indigo-700 bg-[#e7f5ff] p-2 border border-black mb-2">
+                        Belum ada jadwal.
+                    </p>
+                </div>
+                <div>
                     <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Sinopsis</h3>
                     <p id="modalSynopsis" class="text-xs text-slate-700 leading-relaxed font-normal">
                         Sinopsis belum tersedia.
@@ -107,9 +108,10 @@
             const userNavArea = document.getElementById('userNavArea');
             const currentUser = localStorage.getItem('crosscorn_user');
 
+            let html = '';
             if (currentUser) {
-                userNavArea.innerHTML = `
-                    <a href="/history.html" class="brutalist-btn px-3 py-1.5 bg-[#d0ebff] font-bold text-xs flex items-center gap-1">
+                html += `
+                    <a href="/history.html" class="brutalist-btn px-3 py-1.5 bg-[#d0ebff] font-bold text-xs">
                         Tiket Saya (${currentUser})
                     </a>
                     <button onclick="logoutUser()" class="brutalist-btn px-2.5 py-1.5 bg-[#ff8787] text-white font-bold text-xs">
@@ -117,12 +119,18 @@
                     </button>
                 `;
             } else {
-                userNavArea.innerHTML = `
+                html += `
                     <a href="/login.html" class="brutalist-btn px-3 py-1.5 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide">
                         Login
                     </a>
                 `;
             }
+            html += `
+                <a href="/admin.html" class="brutalist-btn px-3 py-1.5 bg-white font-semibold text-xs uppercase tracking-wide">
+                    Admin Panel
+                </a>
+            `;
+            userNavArea.innerHTML = html;
         }
 
         function logoutUser() {
@@ -146,6 +154,7 @@
                 container.innerHTML = allMovies.map(m => {
                     const totalSeats = m.seats !== undefined ? m.seats : (m.total_seats || 30);
                     const isAvailable = totalSeats > 0;
+                    const scheduleText = m.schedule || '13:00, 16:00, 19:00';
 
                     return `
                         <div class="brutalist-card overflow-hidden flex flex-col justify-between cursor-pointer group bg-white" onclick="openMovieModal('${m.id}')">
@@ -156,10 +165,11 @@
                                         ${isAvailable ? `${totalSeats} Kursi` : 'Habis'}
                                     </span>
                                 </div>
-                                <div class="p-4">
+                                <div class="p-4 space-y-1">
                                     <h3 class="text-base font-bold text-slate-900 tracking-tight leading-snug">${m.title}</h3>
-                                    <p class="text-xs font-bold text-indigo-600 mt-0.5">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</p>
-                                    <p class="text-[11px] font-medium text-slate-500 mt-1.5 underline">Detail & Sinopsis →</p>
+                                    <p class="text-xs font-bold text-indigo-600">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</p>
+                                    <p class="text-[10px] bg-[#fff3bf] border border-black px-1.5 py-0.5 inline-block font-bold">Jadwal: ${scheduleText}</p>
+                                    <p class="text-[11px] font-medium text-slate-500 pt-1 underline">Lihat Detail & Sinopsis</p>
                                 </div>
                             </div>
                             <div class="p-4 pt-0">
@@ -194,6 +204,7 @@
             document.getElementById('modalTitle').textContent = movie.title;
             document.getElementById('modalPrice').textContent = `Rp ${Number(movie.price || 0).toLocaleString('id-ID')} / tiket`;
             document.getElementById('modalSeats').textContent = `${totalSeats} Kursi Tersedia`;
+            document.getElementById('modalSchedule').textContent = movie.schedule || '13:00, 16:00, 19:00';
             document.getElementById('modalSynopsis').textContent = movie.synopsis || `Film ${movie.title} menghadirkan pengalaman sinematik yang memukau. Pilih kursi terbaikmu sekarang!`;
 
             const actionContainer = document.getElementById('modalAction');

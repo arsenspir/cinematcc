@@ -43,16 +43,16 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header dengan Judul & Tagline di Tengah, Tanpa Emoji -->
-        <header class="relative mb-6 bg-[#ffdeeb] brutalist-card p-6 text-center">
-            <div class="absolute top-4 left-4">
-                <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
-                    ← Beranda
-                </a>
-            </div>
-            <div class="max-w-xl mx-auto pt-2 sm:pt-0">
+        <!-- Header di Tengah -->
+        <header class="mb-6 bg-[#ffdeeb] brutalist-card p-6 text-center space-y-3">
+            <div class="max-w-xl mx-auto">
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight uppercase">PANEL ADMIN CROSSCORN</h1>
-                <p class="font-medium text-xs text-slate-700 mt-1">Kelola film, ubah sinopsis, dan atur transaksi dengan mudah.</p>
+                <p class="font-medium text-xs text-slate-700 mt-1">Kelola film, atur jadwal tayang, sinopsis, dan transaksi</p>
+            </div>
+            <div>
+                <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs uppercase">
+                    Kembali ke Beranda
+                </a>
             </div>
         </header>
 
@@ -77,6 +77,10 @@
                         <input type="number" id="movieSeats" required value="48" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
+                        <label class="block text-xs font-bold mb-1">Jadwal Tayang (Contoh: 13:00, 16:00):</label>
+                        <input type="text" id="movieSchedule" placeholder="13:00, 16:00, 19:00" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
+                    </div>
+                    <div>
                         <label class="block text-xs font-bold mb-1">Sinopsis Film:</label>
                         <textarea id="movieSynopsis" rows="3" placeholder="Tulis sinopsis film di sini..." class="brutalist-input w-full px-3 py-1.5 text-xs font-medium"></textarea>
                     </div>
@@ -99,12 +103,12 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Daftar Film -->
                 <div class="brutalist-card overflow-hidden bg-white">
-                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film Tersedia & Edit Sinopsis</div>
+                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film, Jadwal & Sinopsis</div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
-                                    <th class="p-2.5">Judul & Sinopsis</th>
+                                    <th class="p-2.5">Judul, Jadwal & Sinopsis</th>
                                     <th class="p-2.5">Harga</th>
                                     <th class="p-2.5">Kursi</th>
                                     <th class="p-2.5 text-center">Aksi</th>
@@ -166,9 +170,10 @@
                     ? `<tr><td colspan="4" class="p-3 text-center text-xs">Belum ada film.</td></tr>`
                     : cachedMovies.map(m => `
                         <tr>
-                            <td class="p-2.5">
+                            <td class="p-2.5 space-y-1">
                                 <strong class="uppercase text-xs block">${m.title}</strong>
-                                <span class="text-[11px] text-slate-500 line-clamp-1">${m.synopsis || 'Belum ada sinopsis'}</span>
+                                <span class="text-[10px] bg-[#fff3bf] border border-black px-1 py-0.5 font-bold inline-block">Jadwal: ${m.schedule || '13:00, 16:00, 19:00'}</span>
+                                <span class="text-[11px] text-slate-500 block line-clamp-1">${m.synopsis || 'Belum ada sinopsis'}</span>
                             </td>
                             <td class="p-2.5">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
                             <td class="p-2.5"><span class="px-2 py-0.5 bg-[#fff3bf] border-2 border-black text-[10px] font-bold">${m.seats !== undefined ? m.seats : 48}</span></td>
@@ -207,9 +212,10 @@
             document.getElementById('movieTitle').value = movie.title;
             document.getElementById('moviePrice').value = movie.price;
             document.getElementById('movieSeats').value = movie.seats !== undefined ? movie.seats : 48;
+            document.getElementById('movieSchedule').value = movie.schedule || '';
             document.getElementById('movieSynopsis').value = movie.synopsis || '';
             
-            document.getElementById('formTitle').textContent = "Edit Film / Sinopsis";
+            document.getElementById('formTitle').textContent = "Edit Film & Jadwal";
             document.getElementById('submitBtn').textContent = "Perbarui Film";
             document.getElementById('cancelEditBtn').classList.remove('hidden');
         }
@@ -259,6 +265,7 @@
                     title: document.getElementById('movieTitle').value,
                     price: Number(document.getElementById('moviePrice').value),
                     seats: Number(document.getElementById('movieSeats').value),
+                    schedule: document.getElementById('movieSchedule').value,
                     synopsis: document.getElementById('movieSynopsis').value,
                     image_url: finalImageUrl
                 };

@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             letter-spacing: -0.01em;
         }
         .brutalist-card {
@@ -39,10 +39,6 @@
             transform: translate(-1px, -1px);
             box-shadow: 3.5px 3.5px 0px #000000;
         }
-        .brutalist-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #000000;
-        }
     </style>
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
@@ -51,7 +47,7 @@
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 bg-[#ffdeeb] brutalist-card p-5">
             <div>
                 <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Panel Admin CROSSCORN 🛠️</h1>
-                <p class="font-medium text-xs text-slate-700 mt-0.5">Kelola daftar film, atur jumlah kursi, dan hapus transaksi.</p>
+                <p class="font-medium text-xs text-slate-700 mt-0.5">Kelola film, ubah sinopsis, dan atur transaksi.</p>
             </div>
             <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
                 ← Ke Beranda
@@ -61,10 +57,11 @@
         <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-2.5 border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-bold"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Form Tambah Film -->
+            <!-- Form Tambah/Edit Film -->
             <div class="brutalist-card p-5 h-fit bg-white">
-                <h2 class="text-sm font-bold uppercase tracking-wide mb-3">Tambah Film Baru</h2>
+                <h2 id="formTitle" class="text-sm font-bold uppercase tracking-wide mb-3">Tambah Film Baru</h2>
                 <form id="addMovieForm" class="space-y-3">
+                    <input type="hidden" id="editMovieId">
                     <div>
                         <label class="block text-xs font-bold mb-1">Judul Film: <span class="text-red-600">*</span></label>
                         <input type="text" id="movieTitle" required placeholder="Contoh: Interstellar" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
@@ -78,12 +75,21 @@
                         <input type="number" id="movieSeats" required value="48" class="brutalist-input w-full px-3 py-1.5 text-xs font-medium">
                     </div>
                     <div>
+                        <label class="block text-xs font-bold mb-1">Sinopsis Film:</label>
+                        <textarea id="movieSynopsis" rows="3" placeholder="Tulis sinopsis film di sini..." class="brutalist-input w-full px-3 py-1.5 text-xs font-medium"></textarea>
+                    </div>
+                    <div>
                         <label class="block text-xs font-bold mb-1">Poster Film (File Lokal)</label>
                         <input type="file" id="movieFile" accept="image/*" class="w-full text-xs font-semibold file:mr-2 file:py-1 file:px-2.5 file:border-2 file:border-black file:bg-[#fff3bf] file:font-bold cursor-pointer">
                     </div>
-                    <button type="submit" id="submitBtn" class="brutalist-btn w-full py-2 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide">
-                        Simpan Film
-                    </button>
+                    <div class="flex gap-2 pt-1">
+                        <button type="submit" id="submitBtn" class="brutalist-btn flex-1 py-2 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide">
+                            Simpan Film
+                        </button>
+                        <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden brutalist-btn px-3 py-2 bg-[#ff8787] text-white font-bold text-xs uppercase">
+                            Batal
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -91,14 +97,14 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Daftar Film -->
                 <div class="brutalist-card overflow-hidden bg-white">
-                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film Tersedia</div>
+                    <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Daftar Film Tersedia & Opsi Edit Sinopsis</div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
-                                    <th class="p-2.5">Judul</th>
+                                    <th class="p-2.5">Judul & Sinopsis</th>
                                     <th class="p-2.5">Harga</th>
-                                    <th class="p-2.5">Sisa Kursi</th>
+                                    <th class="p-2.5">Kursi</th>
                                     <th class="p-2.5 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -134,6 +140,8 @@
     </div>
 
     <script>
+        let cachedMovies = [];
+
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -150,15 +158,20 @@
 
             try {
                 const resMovies = await fetch('/api/movies');
-                const movies = await resMovies.json();
-                moviesBody.innerHTML = movies.length === 0 
+                cachedMovies = await resMovies.json();
+                
+                moviesBody.innerHTML = cachedMovies.length === 0 
                     ? `<tr><td colspan="4" class="p-3 text-center text-xs">Belum ada film.</td></tr>`
-                    : movies.map(m => `
+                    : cachedMovies.map(m => `
                         <tr>
-                            <td class="p-2.5 font-bold uppercase text-xs">${m.title}</td>
+                            <td class="p-2.5">
+                                <strong class="uppercase text-xs block">${m.title}</strong>
+                                <span class="text-[11px] text-slate-500 line-clamp-1">${m.synopsis || 'Belum ada sinopsis'}</span>
+                            </td>
                             <td class="p-2.5">Rp ${Number(m.price || 0).toLocaleString('id-ID')}</td>
-                            <td class="p-2.5"><span class="px-2 py-0.5 bg-[#fff3bf] border-2 border-black text-[10px] font-bold">${m.seats !== undefined ? m.seats : 48} Kursi</span></td>
-                            <td class="p-2.5 text-center">
+                            <td class="p-2.5"><span class="px-2 py-0.5 bg-[#fff3bf] border-2 border-black text-[10px] font-bold">${m.seats !== undefined ? m.seats : 48}</span></td>
+                            <td class="p-2.5 text-center space-x-1">
+                                <button onclick="editMovie('${m.id}')" class="px-2 py-0.5 bg-[#7ec8e3] text-black brutalist-btn text-[10px] font-bold">Edit</button>
                                 <button onclick="deleteMovie('${m.id}')" class="px-2 py-0.5 bg-[#ff6b6b] text-white brutalist-btn text-[10px] font-bold">Hapus</button>
                             </td>
                         </tr>
@@ -184,6 +197,29 @@
             }
         }
 
+        function editMovie(id) {
+            const movie = cachedMovies.find(m => m.id == id);
+            if(!movie) return;
+
+            document.getElementById('editMovieId').value = movie.id;
+            document.getElementById('movieTitle').value = movie.title;
+            document.getElementById('moviePrice').value = movie.price;
+            document.getElementById('movieSeats').value = movie.seats !== undefined ? movie.seats : 48;
+            document.getElementById('movieSynopsis').value = movie.synopsis || '';
+            
+            document.getElementById('formTitle').textContent = "Edit Film / Sinopsis";
+            document.getElementById('submitBtn').textContent = "Perbarui Film";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+        }
+
+        function resetForm() {
+            document.getElementById('addMovieForm').reset();
+            document.getElementById('editMovieId').value = "";
+            document.getElementById('formTitle').textContent = "Tambah Film Baru";
+            document.getElementById('submitBtn').textContent = "Simpan Film";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
         async function deleteMovie(id) {
             if (!confirm("Hapus film ini?")) return;
             try {
@@ -206,15 +242,23 @@
 
         document.getElementById('addMovieForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const editId = document.getElementById('editMovieId').value;
             const submitBtn = document.getElementById('submitBtn');
             const fileInput = document.getElementById('movieFile');
             let imageUrl = "https://via.placeholder.com/300x450?text=No+Image";
 
+            // Jika sedang edit, ambil gambar lama jika tidak upload baru
+            if(editId) {
+                const existing = cachedMovies.find(m => m.id == editId);
+                if(existing) imageUrl = existing.image_url;
+            }
+
             const processSubmit = async (finalImageUrl) => {
-                const newMovie = {
+                const movieData = {
                     title: document.getElementById('movieTitle').value,
                     price: Number(document.getElementById('moviePrice').value),
                     seats: Number(document.getElementById('movieSeats').value),
+                    synopsis: document.getElementById('movieSynopsis').value,
                     image_url: finalImageUrl
                 };
 
@@ -222,20 +266,32 @@
                 submitBtn.textContent = "Menyimpan...";
 
                 try {
-                    const response = await fetch('/api/movies', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newMovie)
-                    });
-                    if (!response.ok) throw new Error("Gagal menambah film.");
-                    showToast("Film ditambahkan!");
-                    document.getElementById('addMovieForm').reset();
+                    let response;
+                    if(editId) {
+                        // PUT / PATCH atau endpoint update jika tersedia, atau hapus lalu buat baru / metode API Supabase
+                        // Menggunakan endpoint POST dengan ID atau penyesuaian API backend Vercel yang ada
+                        response = await fetch(`/api/movies?id=${editId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(movieData)
+                        });
+                    } else {
+                        response = await fetch('/api/movies', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(movieData)
+                        });
+                    }
+
+                    if (!response.ok) throw new Error("Gagal menyimpan data film.");
+                    showToast(editId ? "Film berhasil diperbarui!" : "Film berhasil ditambahkan!");
+                    resetForm();
                     fetchAdminData();
                 } catch (err) {
                     showToast(err.message, 'error');
                 } finally {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = "Simpan Film";
+                    submitBtn.textContent = editId ? "Perbarui Film" : "Simpan Film";
                 }
             };
 

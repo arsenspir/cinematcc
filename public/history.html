@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histori Tiket - CROSSCORN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .brutalist-card {
+            background: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 5px 5px 0px #000000;
+            border-radius: 0px !important;
+        }
+        .brutalist-btn {
+            border: 2px solid #000000;
+            box-shadow: 2.5px 2.5px 0px #000000;
+            transition: all 0.1s ease;
+            border-radius: 0px !important;
+        }
+        .brutalist-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3.5px 3.5px 0px #000000;
+        }
+    </style>
+</head>
+<body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-6 bg-[#d0ebff] brutalist-card p-5">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Riwayat Pembelian Tiket 🎟️</h1>
+                <p id="userDisplay" class="text-xs font-semibold text-slate-700 mt-0.5">Memuat akun...</p>
+            </div>
+            <a href="/" class="brutalist-btn px-3 py-1.5 bg-[#fff3bf] font-bold text-xs">
+                ← Beranda
+            </a>
+        </header>
+
+        <div class="brutalist-card overflow-hidden bg-white">
+            <div class="p-3 bg-[#fff3bf] border-b-2 border-black font-bold uppercase text-xs">Tiket Saya</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-[#f8f9fa] border-b-2 border-black text-[11px] font-bold text-slate-700 uppercase">
+                            <th class="p-3">Film</th>
+                            <th class="p-3">Kursi</th>
+                            <th class="p-3">Total Harga</th>
+                            <th class="p-3 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody" class="divide-y-2 divide-black text-xs font-medium">
+                        <tr><td colspan="4" class="p-4 text-center">Memuat riwayat tiket...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const currentUser = localStorage.getItem('crosscorn_user');
+        if(!currentUser) {
+            alert("Silakan login terlebih dahulu!");
+            window.location.href = '/login.html';
+        } else {
+            document.getElementById('userDisplay').textContent = `Pengguna Aktif: ${currentUser}`;
+        }
+
+        async function fetchHistory() {
+            const tbody = document.getElementById('historyTableBody');
+            try {
+                const res = await fetch('/api/bookings');
+                const bookings = await res.json();
+                
+                // Filter berdasarkan nama pemesan yang cocok dengan user login
+                const userBookings = bookings.filter(b => b.customer_name && b.customer_name.toLowerCase() === currentUser.toLowerCase());
+
+                if(userBookings.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500 text-xs">Belum ada riwayat pemesanan tiket atas nama ${currentUser}.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = userBookings.map(b => `
+                    <tr>
+                        <td class="p-3 font-bold uppercase">${b.movie_title}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 bg-[#e7f5ff] border-2 border-black text-[10px] font-bold">${b.seats}</span></td>
+                        <td class="p-3 font-bold text-emerald-700">Rp ${Number(b.total_price || 0).toLocaleString('id-ID')}</td>
+                        <td class="p-3 text-center"><span class="px-2 py-0.5 bg-[#b2f2bb] border-2 border-black text-[10px] font-bold uppercase">Berhasil</span></td>
+                    </tr>
+                `).join('');
+            } catch(err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-600">Gagal memuat data histori.</td></tr>`;
+            }
+        }
+
+        fetchHistory();
+    </script>
+</body>
+</html>

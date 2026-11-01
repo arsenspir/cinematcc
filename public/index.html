@@ -59,7 +59,7 @@
                             </div>
                             <div class="p-5 pt-0">
                                 ${isAvailable ? `
-                                    <button onclick="alert('Fitur pemesanan untuk film ${m.title}')" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-600/20">
+                                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-600/20">
                                         Pesan Tiket
                                     </button>
                                 ` : `

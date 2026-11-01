@@ -7,63 +7,67 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6 sm:p-10 flex items-center justify-center">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8 flex items-center justify-center">
     <!-- Toast Notifikasi -->
-    <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl border transition-all duration-300"></div>
+    <div id="toast" class="hidden fixed top-5 right-5 z-50 px-4 py-3 rounded-2xl text-sm font-medium shadow-2xl border transition-all duration-300"></div>
 
-    <div class="max-w-2xl w-full bg-slate-900 border border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl">
-        <header class="mb-6 flex justify-between items-center border-b border-slate-800 pb-4">
+    <div class="max-w-3xl w-full bg-slate-900/90 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 sm:p-10 shadow-2xl">
+        <!-- Header -->
+        <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800/80 pb-6">
             <div>
-                <h1 class="text-xl font-bold tracking-tight">Pilih Kursi Bioskop</h1>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Pilih Kursi Bioskop</h1>
                 <p id="movieTitleDisplay" class="text-indigo-400 text-sm font-medium mt-1">Memuat film...</p>
             </div>
-            <a href="/" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 px-3 py-2 rounded-xl transition group">
-                <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <a href="/" class="inline-flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 px-4 py-2.5 rounded-2xl transition border border-slate-700/50 group">
+                <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Kembali
             </a>
         </header>
 
         <form id="bookingForm" class="space-y-6">
             <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Nama Pemesan</label>
-                <input type="text" id="customerName" required placeholder="Masukkan nama lengkap" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Nama Pemesan</label>
+                <input type="text" id="customerName" required placeholder="Masukkan nama lengkap" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition shadow-inner">
             </div>
 
             <!-- Denah Bioskop & Layar -->
-            <div class="space-y-3">
-                <label class="block text-xs font-medium text-slate-400">Pilih Kursi (Sentuh posisi kursi)</label>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Denah Tempat Duduk</label>
+                    <span class="text-xs text-indigo-400 font-medium">Klik beberapa kursi untuk memilih lebih dari satu</span>
+                </div>
                 
-                <!-- Layar Bioskop -->
-                <div class="w-full bg-slate-800 text-center py-1.5 rounded-lg text-xs font-semibold text-slate-400 tracking-widest shadow-inner">
+                <!-- Layar Bioskop Minimalis -->
+                <div class="w-full relative py-2 bg-gradient-to-r from-indigo-950/20 via-indigo-600/40 to-indigo-950/20 rounded-2xl border border-indigo-500/30 text-center text-xs font-semibold text-indigo-300 tracking-widest shadow-lg">
                     LAYAR BIOSKOP
                 </div>
 
-                <!-- Grid Denah Kursi -->
-                <div id="seatGrid" class="grid grid-cols-5 gap-2.5 p-4 bg-slate-950 border border-slate-800 rounded-xl justify-items-center">
-                    <!-- Kursi akan dirender otomatis via JavaScript -->
+                <!-- Grid Denah Kursi (48 Kursi: Baris A-F, Kolom 1-8) -->
+                <div id="seatGrid" class="grid grid-cols-4 sm:grid-cols-8 gap-2.5 p-5 bg-slate-950/80 border border-slate-800/80 rounded-2xl justify-items-center shadow-inner">
+                    <!-- Kursi dirender via JS -->
                 </div>
 
                 <!-- Keterangan Status Kursi -->
-                <div class="flex justify-center gap-6 text-xs text-slate-400 pt-2">
-                    <div class="flex items-center gap-2"><span class="w-3 h-3 bg-indigo-600 rounded-sm"></span> Tersedia</div>
-                    <div class="flex items-center gap-2"><span class="w-3 h-3 bg-emerald-500 rounded-sm"></span> Dipilih</div>
-                    <div class="flex items-center gap-2"><span class="w-3 h-3 bg-red-600/80 rounded-sm"></span> Dipesan (Merah)</div>
+                <div class="flex flex-wrap justify-center gap-6 text-xs text-slate-400 pt-1">
+                    <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 bg-slate-800 border border-slate-700 rounded-md"></span> Tersedia</div>
+                    <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 bg-emerald-500 rounded-md shadow-lg shadow-emerald-500/30"></span> Dipilih</div>
+                    <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 bg-red-600/80 rounded-md"></span> Dipesan</div>
                 </div>
             </div>
 
-            <!-- Informasi Ringkasan -->
-            <div class="bg-slate-950/50 border border-slate-800 p-4 rounded-xl flex justify-between items-center text-sm">
+            <!-- Ringkasan Pemesanan Minimalis -->
+            <div class="bg-slate-950 border border-slate-800/80 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <span class="text-slate-400">Kursi Dipilih: </span>
-                    <span id="selectedSeatDisplay" class="font-bold text-indigo-400">-</span>
+                    <span class="text-xs text-slate-400 block mb-1">Kursi Dipilih (<span id="countDisplay">0</span>):</span>
+                    <span id="selectedSeatsDisplay" class="font-bold text-indigo-400 text-sm">-</span>
                 </div>
-                <div>
-                    <span class="text-slate-400">Total Harga: </span>
-                    <span id="totalPriceDisplay" class="font-bold text-emerald-400">Rp 0</span>
+                <div class="text-left sm:text-right">
+                    <span class="text-xs text-slate-400 block mb-1">Total Harga:</span>
+                    <span id="totalPriceDisplay" class="font-bold text-emerald-400 text-lg">Rp 0</span>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium text-sm transition shadow-lg shadow-indigo-600/20">
+            <button type="submit" id="submitBtn" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-semibold text-sm transition shadow-xl shadow-indigo-600/25">
                 Konfirmasi Pemesanan
             </button>
         </form>
@@ -73,7 +77,7 @@
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl border transition-all duration-300 ${
+            toast.className = `fixed top-5 right-5 z-50 px-4 py-3 rounded-2xl text-sm font-medium shadow-2xl border transition-all duration-300 ${
                 type === 'success' ? 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200' : 'bg-red-950/90 border-red-500/50 text-red-200'
             }`;
             toast.classList.remove('hidden');
@@ -85,12 +89,11 @@
         document.getElementById('movieTitleDisplay').textContent = `Film: ${movieTitle}`;
 
         let moviePrice = 50000;
-        let selectedSeat = null;
+        let selectedSeats = [];
         let bookedSeats = [];
 
         async function initBookingPage() {
             try {
-                // Ambil data detail film untuk harga
                 const resMovies = await fetch('/api/movies');
                 const movies = await resMovies.json();
                 const currentMovie = movies.find(m => m.title.toLowerCase() === movieTitle.toLowerCase());
@@ -98,41 +101,45 @@
                     moviePrice = Number(currentMovie.price || 50000);
                 }
 
-                // Ambil data pesanan yang sudah ada untuk film ini agar kursi yang sudah dipesan menjadi merah
                 const resBookings = await fetch('/api/bookings');
                 const bookings = await resBookings.json();
-                bookedSeats = bookings
-                    .filter(b => b.movie_title.toLowerCase() === movieTitle.toLowerCase())
-                    .map(b => b.seats);
+                
+                // Mendukung pemisahan kursi jika disimpan dengan koma (misal: "A1,A2")
+                bookings.forEach(b => {
+                    if (b.movie_title.toLowerCase() === movieTitle.toLowerCase() && b.seats) {
+                        const seatsArr = b.seats.split(',').map(s => s.trim());
+                        bookedSeats.push(...seatsArr);
+                    }
+                });
 
                 renderSeats();
             } catch (err) {
-                console.error("Gagal memuat denah kursi:", err);
+                console.error("Gagal memuat data kursi:", err);
             }
         }
 
         function renderSeats() {
             const seatGrid = document.getElementById('seatGrid');
-            const rows = ['A', 'B', 'C', 'D'];
+            const rows = ['A', 'B', 'C', 'D', 'E', 'F'];
             let html = '';
 
             rows.forEach(row => {
-                for (let i = 1; i <= 5; i++) {
+                for (let i = 1; i <= 8; i++) {
                     const seatCode = `${row}${i}`;
                     const isBooked = bookedSeats.includes(seatCode);
-                    const isSelected = selectedSeat === seatCode;
+                    const isSelected = selectedSeats.includes(seatCode);
 
-                    let bgClass = "bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer";
+                    let bgClass = "bg-slate-800 hover:bg-indigo-600/50 text-slate-300 border border-slate-700 cursor-pointer";
                     if (isBooked) {
-                        bgClass = "bg-red-600/80 text-white/50 cursor-not-allowed opacity-75";
+                        bgClass = "bg-red-600/80 text-white/40 border-red-700/50 cursor-not-allowed";
                     } else if (isSelected) {
-                        bgClass = "bg-emerald-500 text-white ring-2 ring-white scale-105";
+                        bgClass = "bg-emerald-500 text-white border-emerald-400 shadow-lg shadow-emerald-500/30 scale-105 font-bold";
                     }
 
                     html += `
                         <button type="button" 
-                            class="w-10 h-10 rounded-lg font-bold text-xs transition-all flex items-center justify-center ${bgClass}"
-                            ${isBooked ? 'disabled' : `onclick="selectSeat('${seatCode}')"`}>
+                            class="w-10 h-10 rounded-xl text-xs font-semibold transition-all flex items-center justify-center ${bgClass}"
+                            ${isBooked ? 'disabled' : `onclick="toggleSeat('${seatCode}')"`}>
                             ${seatCode}
                         </button>
                     `;
@@ -140,19 +147,30 @@
             });
 
             seatGrid.innerHTML = html;
+            updateSummary();
         }
 
-        window.selectSeat = function(seatCode) {
-            selectedSeat = seatCode;
-            document.getElementById('selectedSeatDisplay').textContent = seatCode;
-            document.getElementById('totalPriceDisplay').textContent = `Rp ${moviePrice.toLocaleString('id-ID')}`;
+        window.toggleSeat = function(seatCode) {
+            if (selectedSeats.includes(seatCode)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatCode);
+            } else {
+                selectedSeats.push(seatCode);
+            }
             renderSeats();
         };
 
+        function updateSummary() {
+            const count = selectedSeats.length;
+            document.getElementById('countDisplay').textContent = count;
+            document.getElementById('selectedSeatsDisplay').textContent = count > 0 ? selectedSeats.join(', ') : '-';
+            const totalPrice = count * moviePrice;
+            document.getElementById('totalPriceDisplay').textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+        }
+
         document.getElementById('bookingForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!selectedSeat) {
-                showToast("Silakan pilih kursi terlebih dahulu!", "error");
+            if (selectedSeats.length === 0) {
+                showToast("Silakan pilih minimal 1 kursi!", "error");
                 return;
             }
 
@@ -160,14 +178,15 @@
             const bookingData = {
                 customer_name: document.getElementById('customerName').value,
                 movie_title: movieTitle,
-                seats: selectedSeat,
-                total_price: moviePrice
+                seats: selectedSeats.join(', '),
+                total_price: selectedSeats.length * moviePrice
             };
 
             submitBtn.disabled = true;
             submitBtn.textContent = "Memproses...";
 
             try {
+                // Lakukan pemesanan untuk setiap kursi yang dipilih (atau sekaligus)
                 const response = await fetch('/api/bookings', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -177,7 +196,7 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.error || "Gagal melakukan pemesanan.");
 
-                showToast("Tiket berhasil dipesan!");
+                showToast("Pemesanan tiket berhasil!");
                 setTimeout(() => { window.location.href = '/'; }, 1500);
             } catch (err) {
                 showToast(err.message, 'error');

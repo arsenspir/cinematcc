@@ -42,6 +42,28 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`Server lokal berjalan di http://localhost:${PORT}`);
   });
 }
+const { createClient } = require('@supabase/supabase-js');
 
+// Inisialisasi Supabase client menggunakan environment variables
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Endpoint API untuk mengambil data film
+app.get('/api/movies', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('movies') // Pastikan nama tabel di Supabase kamu benar ('movies')
+      .select('*');
+
+    if (error) {
+      throw error;
+    }
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // PENTING: Ekspor aplikasi agar bisa dibaca dan dijalankan oleh Vercel Serverless Function
 module.exports = app;

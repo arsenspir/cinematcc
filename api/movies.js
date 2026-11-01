@@ -11,8 +11,14 @@ module.exports = async (req, res) => {
       const { data, error } = await supabase.from('movies').insert([req.body]).select();
       if (error) throw error;
       return res.status(201).json(data[0]);
+    } else if (req.method === 'DELETE') {
+      const { id } = req.query;
+      if (!id) return res.status(400).json({ error: "ID film tidak valid." });
+      const { error } = await supabase.from('movies').delete().eq('id', id);
+      if (error) throw error;
+      return res.status(200).json({ message: "Film berhasil dihapus." });
     } else {
-      res.setHeader('Allow', ['GET', 'POST']);
+      res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
       return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (err) {

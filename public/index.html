@@ -3,69 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineTicket - Beranda Bioskop</title>
+    <title>CROSSCORN - Neo-Brutalism Cinema</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Gaya Khas Neo-Brutalism: Hard Shadow & Thick Borders */
+        .neo-box {
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+        .neo-box:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000;
+        }
+        .neo-button {
+            border: 3px solid #000;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
+        }
+        .neo-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000;
+        }
+        .neo-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6 sm:p-10">
+<body class="bg-[#f4f4f0] text-black min-h-screen p-4 sm:p-10 font-sans">
     <div class="max-w-6xl mx-auto">
-        <!-- Header Beranda -->
-        <header class="flex justify-between items-center mb-8">
+        <!-- Header Brutalist -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-yellow-400 neo-box p-6 rounded-xl">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold">CineTicket - Daftar Film</h1>
-                <p class="text-slate-400 text-sm mt-1">Pilih film favoritmu, lihat detail, dan pesan tiket sekarang.</p>
+                <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tight">CROSSCORN 🍿</h1>
+                <p class="text-black font-semibold text-sm mt-1">Pilih film, lihat sinopsis, dan amankan kursimu sekarang!</p>
             </div>
-            <a href="/admin.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm transition font-medium border border-slate-700/50">Panel Admin →</a>
+            <a href="/admin.html" class="neo-button px-5 py-2.5 bg-white font-bold text-sm rounded-lg uppercase tracking-wider">
+                Panel Admin →
+            </a>
         </header>
 
         <!-- Container Daftar Film -->
-        <div id="moviesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div class="col-span-full text-center text-slate-400 py-10">Memuat daftar film...</div>
+        <div id="moviesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <div class="col-span-full text-center font-bold py-10">Memuat daftar film...</div>
         </div>
     </div>
 
-    <!-- Modal Detail Film / Sinopsis -->
-    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-200">
-            <!-- Tombol Tutup Modal -->
-            <button onclick="closeMovieModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded-full flex items-center justify-center transition">
+    <!-- Modal Detail Film (Brutalist Style) -->
+    <div id="movieModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white neo-box max-w-lg w-full overflow-hidden rounded-2xl relative animate-in fade-in zoom-in duration-150">
+            <!-- Tombol Tutup -->
+            <button onclick="closeMovieModal()" class="absolute top-4 right-4 z-10 w-9 h-9 bg-red-500 neo-button font-black rounded-lg flex items-center justify-center text-white">
                 ✕
             </button>
             
             <!-- Poster Modal -->
-            <div class="h-56 sm:h-64 w-full bg-slate-950 relative">
+            <div class="h-60 sm:h-72 w-full bg-slate-200 border-b-3 border-black relative">
                 <img id="modalImage" src="" alt="Poster" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
             </div>
 
             <!-- Konten Detail -->
             <div class="p-6 space-y-4">
                 <div>
-                    <h2 id="modalTitle" class="text-xl sm:text-2xl font-bold text-white"></h2>
-                    <p id="modalPrice" class="text-indigo-400 font-semibold text-sm mt-1"></p>
+                    <h2 id="modalTitle" class="text-2xl font-black uppercase"></h2>
+                    <p id="modalPrice" class="text-indigo-600 font-extrabold text-base mt-1"></p>
                 </div>
 
-                <!-- Informasi Tambahan (Durasi & Pemeran) -->
-                <div class="grid grid-cols-2 gap-3 bg-slate-950 p-3.5 rounded-2xl border border-slate-800/60 text-xs">
+                <!-- Info Box -->
+                <div class="grid grid-cols-2 gap-3 bg-cyan-200 neo-box p-4 rounded-xl text-xs font-bold">
                     <div>
-                        <span class="text-slate-400 block mb-0.5">Durasi</span>
-                        <span id="modalDuration" class="font-medium text-slate-200">120 Menit</span>
+                        <span class="text-black/70 block uppercase">Durasi</span>
+                        <span id="modalDuration" class="text-sm">120 Menit</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block mb-0.5">Kursi Tersedia</span>
-                        <span id="modalSeats" class="font-medium text-emerald-400">30 Kursi</span>
+                        <span class="text-black/70 block uppercase">Kursi Tersedia</span>
+                        <span id="modalSeats" class="text-sm text-emerald-700">30 Kursi</span>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Sinopsis</h3>
-                    <p id="modalSynopsis" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Sinopsis belum tersedia untuk film ini. Nikmati pengalaman menonton bioskop terbaik dengan kualitas layar dan audio premium.
+                    <h3 class="text-xs font-black uppercase tracking-wider mb-1">Sinopsis</h3>
+                    <p id="modalSynopsis" class="text-xs sm:text-sm text-black/80 font-medium leading-relaxed">
+                        Sinopsis belum tersedia.
                     </p>
                 </div>
 
                 <div id="modalAction" class="pt-2">
-                    <!-- Tombol Pesan di dalam Modal -->
+                    <!-- Tombol Pesan di Modal -->
                 </div>
             </div>
         </div>
@@ -84,38 +110,40 @@
                 if (!response.ok) throw new Error("Gagal mengambil data film.");
 
                 if (allMovies.length === 0) {
-                    container.innerHTML = `<div class="col-span-full text-center text-slate-400 py-10">Belum ada film yang tersedia saat ini.</div>`;
+                    container.innerHTML = `<div class="col-span-full text-center font-bold py-10 bg-white neo-box rounded-xl p-8">Belum ada film yang tersedia saat ini.</div>`;
                     return;
                 }
 
-                container.innerHTML = allMovies.map(m => {
+                // Warna latar kartu bergantian agar ala Neo-Brutalism UI Kit
+                const cardColors = ['bg-pink-300', 'bg-cyan-300', 'bg-emerald-300', 'bg-purple-300', 'bg-amber-300'];
+
+                container.innerHTML = allMovies.map((m, index) => {
                     const totalSeats = m.seats !== undefined ? m.seats : (m.total_seats || 30);
                     const isAvailable = totalSeats > 0;
+                    const bgHeaderColor = cardColors[index % cardColors.length];
 
                     return `
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group cursor-pointer transition hover:border-slate-700" onclick="openMovieModal('${m.id}')">
+                        <div class="bg-white neo-box rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group" onclick="openMovieModal('${m.id}')">
                             <div>
-                                <div class="h-64 w-full bg-slate-800 relative overflow-hidden">
-                                    <img src="${m.image_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                    <span class="absolute top-3 right-3 px-2.5 py-1 bg-slate-900/80 backdrop-blur text-xs font-semibold rounded-full ${isAvailable ? 'text-emerald-400' : 'text-red-400'}">
+                                <div class="h-64 w-full ${bgHeaderColor} border-b-3 border-black relative overflow-hidden">
+                                    <img src="${m.image_url || 'https://via.placeholder.com/300x450?text=No+Image'}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
+                                    <span class="absolute top-3 right-3 px-3 py-1 bg-white border-2 border-black font-extrabold text-xs rounded-lg shadow-[2px_2px_0px_#000] ${isAvailable ? 'text-emerald-700' : 'text-red-600'}">
                                         ${isAvailable ? `${totalSeats} Kursi` : 'Habis'}
                                     </span>
                                 </div>
                                 <div class="p-5">
-                                    <h3 class="text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition">${m.title}</h3>
-<div>
-                                    <p class="text-sm text-slate-400 mt-1">Rp ${Number(m.price || 0).toLocaleString('id-ID')} / tiket</p>
-                                    <p class="text-xs text-indigo-400/80 mt-2 font-medium">Klik untuk lihat detail & sinopsis →</p>
-                                </div>
+                                    <h3 class="text-xl font-black uppercase tracking-tight">${m.title}</h3>
+                                    <p class="text-sm font-extrabold text-indigo-600 mt-1">Rp ${Number(m.price || 0).toLocaleString('id-ID')} / tiket</p>
+                                    <p class="text-xs font-bold text-black/60 mt-2 underline">Klik untuk lihat detail & sinopsis →</p>
                                 </div>
                             </div>
                             <div class="p-5 pt-0">
                                 ${isAvailable ? `
-                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium text-sm transition shadow-lg shadow-indigo-600/20">
+                                    <button onclick="event.stopPropagation(); window.location.href='/book.html?movie=${encodeURIComponent(m.title)}'" class="w-full py-3 bg-yellow-400 neo-button font-black text-sm rounded-xl uppercase tracking-wider">
                                         Pesan Tiket
                                     </button>
                                 ` : `
-                                    <button disabled class="w-full py-2.5 bg-slate-800 text-slate-500 rounded-xl font-medium text-sm cursor-not-allowed">
+                                    <button disabled class="w-full py-3 bg-slate-300 border-3 border-black font-bold text-sm rounded-xl text-slate-500 cursor-not-allowed">
                                         Tiket Habis
                                     </button>
                                 `}
@@ -126,7 +154,7 @@
 
             } catch (err) {
                 console.error("Error:", err);
-                container.innerHTML = `<div class="col-span-full text-center text-red-400 py-10">Gagal memuat film: ${err.message}</div>`;
+                container.innerHTML = `<div class="col-span-full text-center font-bold text-red-600 py-10 bg-white neo-box rounded-xl">Gagal memuat film: ${err.message}</div>`;
             }
         }
 
@@ -141,18 +169,18 @@
             document.getElementById('modalTitle').textContent = movie.title;
             document.getElementById('modalPrice').textContent = `Rp ${Number(movie.price || 0).toLocaleString('id-ID')} / tiket`;
             document.getElementById('modalSeats').textContent = `${totalSeats} Kursi Tersedia`;
-            document.getElementById('modalSynopsis').textContent = movie.synopsis || `Film ${movie.title} menghadirkan alur cerita yang menarik dengan penayangan visual berkualitas tinggi. Segera pesan kursi pilihan Anda sebelum kehabisan!`;
+            document.getElementById('modalSynopsis').textContent = movie.synopsis || `Film ${movie.title} menghadirkan pengalaman sinematik yang memukau. Pilih kursi terbaikmu sekarang!`;
 
             const actionContainer = document.getElementById('modalAction');
             if (isAvailable) {
                 actionContainer.innerHTML = `
-                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition shadow-lg shadow-indigo-600/25">
+                    <button onclick="window.location.href='/book.html?movie=${encodeURIComponent(movie.title)}'" class="w-full py-3.5 bg-yellow-400 neo-button font-black text-sm rounded-xl uppercase tracking-wider">
                         Pesan Kursi Sekarang
                     </button>
                 `;
             } else {
                 actionContainer.innerHTML = `
-                    <button disabled class="w-full py-3 bg-slate-800 text-slate-500 rounded-xl font-semibold text-sm cursor-not-allowed">
+                    <button disabled class="w-full py-3.5 bg-slate-300 border-3 border-black font-bold text-sm rounded-xl text-slate-500 cursor-not-allowed">
                         Tiket Habis
                     </button>
                 `;
@@ -165,7 +193,6 @@
             document.getElementById('movieModal').classList.add('hidden');
         }
 
-        // Tutup modal jika klik di luar area modal
         window.onclick = function(event) {
             const modal = document.getElementById('movieModal');
             if (event.target === modal) {

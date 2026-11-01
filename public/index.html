@@ -42,15 +42,22 @@
 </head>
 <body class="bg-[#f7f7f4] text-slate-900 min-h-screen p-4 sm:p-8">
     <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 bg-[#fff3bf] brutalist-card p-5">
+        <!-- Header Utama -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-[#fff3bf] brutalist-card p-5">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">CROSSCORN 🍿</h1>
                 <p class="text-slate-700 font-medium text-xs sm:text-sm mt-0.5">Pilih film favoritmu, lihat sinopsis, dan amankan kursimu sekarang!</p>
             </div>
-            <a href="/admin.html" class="brutalist-btn px-4 py-2 bg-white font-semibold text-xs uppercase tracking-wide">
-                Panel Admin →
-            </a>
+            
+            <!-- Area Navigasi User & Admin -->
+            <div class="flex flex-wrap items-center gap-2">
+                <div id="userNavArea" class="flex items-center gap-2">
+                    <!-- Tombol Login / Info Akun dirender via JavaScript -->
+                </div>
+                <a href="/admin.html" class="brutalist-btn px-3 py-1.5 bg-white font-semibold text-xs uppercase tracking-wide">
+                    Admin →
+                </a>
+            </div>
         </header>
 
         <!-- Container Daftar Film -->
@@ -96,6 +103,34 @@
 
     <script>
         let allMovies = [];
+
+        // Inisialisasi Status User Login di Navigasi Header
+        function initUserNav() {
+            const userNavArea = document.getElementById('userNavArea');
+            const currentUser = localStorage.getItem('crosscorn_user');
+
+            if (currentUser) {
+                userNavArea.innerHTML = `
+                    <a href="/history.html" class="brutalist-btn px-3 py-1.5 bg-[#d0ebff] font-bold text-xs flex items-center gap-1">
+                        🎟️ Tiket Saya (${currentUser})
+                    </a>
+                    <button onclick="logoutUser()" class="brutalist-btn px-2.5 py-1.5 bg-[#ff8787] text-white font-bold text-xs">
+                        Keluar
+                    </button>
+                `;
+            } else {
+                userNavArea.innerHTML = `
+                    <a href="/login.html" class="brutalist-btn px-3 py-1.5 bg-[#99e9f2] font-bold text-xs uppercase tracking-wide">
+                        Login User
+                    </a>
+                `;
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('crosscorn_user');
+            initUserNav();
+        }
 
         async function fetchMovies() {
             const container = document.getElementById('moviesContainer');
@@ -190,6 +225,7 @@
             if (event.target === modal) closeMovieModal();
         }
 
+        initUserNav();
         fetchMovies();
     </script>
 </body>
